@@ -9,3 +9,4 @@
   register: certUpdate
   changed_when: certUpdate.stdout_lines[2] != 'Certificate not yet due for renewal; no action taken.'
   with_items: "{{ webserver.domains }}"
+  notify: reload nginx
