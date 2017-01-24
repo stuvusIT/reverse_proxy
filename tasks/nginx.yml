@@ -1,0 +1,25 @@
+- name: Install nginx
+  package:
+    name: nginx
+    state: latest
+
+- name: Copy base nginx config
+  template:
+    backup: yes
+    dest: /etc/nginx/nginx.conf
+    src: files/nginx.conf
+  notify: reload nginx
+    
+- name: Create reverse proxy entries
+  template:
+    backup: no
+    dest: /etc/nginx/reverse_proxy.conf
+    src: files/reverse_proxy.conf
+  notify: reload nginx
+
+- name: Make sure nginx is enabled and running
+  systemd:
+    name: nginx.service
+    enabled: yes
+    daemon_reload: yes
+    state: started
