@@ -1,0 +1,11 @@
+---
+- name: install certbot
+  apt:
+    name: certbot
+    state: present
+
+- name: obtain/renew certificates
+  command: certbot certonly --staging --webroot --keep-until-expiring --expand --non-interactive --agree-tos -m letsencrypt@mr-pi.de -t -w /var/www/html -d {{ item.domain }}
+  register: certUpdate
+  changed_when: certUpdate.stdout_lines[2] != 'Certificate not yet due for renewal; no action taken.'
+  with_items: "{{ webserver.domains }}"
