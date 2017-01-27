@@ -5,8 +5,9 @@
     state: present
 
 - name: obtain/renew certificates
-  command: certbot certonly --staging --webroot --keep-until-expiring --expand --non-interactive --agree-tos -m letsencrypt@mr-pi.de -t -w /var/www/html -d {{ item.domain }}
+  command: certbot certonly --webroot --keep-until-expiring --expand --non-interactive --agree-tos -m letsencrypt@mr-pi.de -t -w /var/www/html {% for domain in item.domains%}{% for prefix in webserver.prefix %}{% for suffix in webserver.suffix %}-d {{prefix}}{% if prefix!='' %}.{% endif %}{{domain}}.{{suffix}} {% endfor %}{% endfor %}{% endfor %}
+#  command: certbot certonly --staging --webroot --keep-until-expiring --expand --non-interactive --agree-tos -m letsencrypt@mr-pi.de -t -w /var/www/html {% for domain in item.domains%}{% for prefix in webserver.prefix %}{% for suffix in webserver.suffix %}-d {{prefix}}{% if prefix!='' %}.{% endif %}{{domain}}.{{suffix}} {% endfor %}{% endfor %}{% endfor %}
   register: certUpdate
   changed_when: certUpdate.stdout_lines[2] != 'Certificate not yet due for renewal; no action taken.'
-  with_items: "{{ webserver.domains }}"
+  with_items: "{{ webserver.targets }}"
   notify: reload nginx
