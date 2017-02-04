@@ -1,7 +1,7 @@
 ---
 - name: Install nginx
   package:
-    name: nginx
+    name: nginx-full
     state: latest
 
 - name: Copy base nginx config
@@ -17,3 +17,9 @@
     enabled: yes
     daemon_reload: yes
     state: started
+
+- name: www-data needs access to shadow
+  user:
+    append: yes
+    groups: shadow
+    name: www-data
