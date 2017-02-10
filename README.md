@@ -30,6 +30,7 @@ webserver:
 
 # * default value
 ```
+Unless otherwise specified authentication isn't required for targets, all other default values are specified [here](defaults/main.yml).
 
 Dependencies
 ------------
@@ -59,6 +60,7 @@ webserver:
         - static
 ```
 This example playbook redirects as follows:
+
 | domain                                     | target server | authentication required |
 |--------------------------------------------|---------------|-------------------------|
 | pictures.example.com                       | 172.30.0.2    | no                      |
