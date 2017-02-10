@@ -1,0 +1,7 @@
+---
+webserver:
+  suffix:
+    - ""
+  prefix:
+    - ""
+  targets: []
