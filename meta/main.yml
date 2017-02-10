@@ -16,6 +16,8 @@ galaxy_info:
   galaxy_tags:
     - nginx
     - reverse proxy
+    - proxy
     - letsencrypt
+    - system
 
 dependencies: []
