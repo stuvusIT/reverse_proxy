@@ -1,15 +1,15 @@
 reverse_proxy
 =============
 
-Configure a nginx reverse proxy with ansible and letsencrypt.
+Installs and configure nginx as reverse proxy. Redirects all http requests to https, certificates are automatically issued by [Let's Encrypt](https://letsencrypt.org).
 
-Certificates are automatically updated on any ansible-playbook run, if necessary.
+If necessary, certificates are automatically updated, anytime ansible-playbook is executed.
 Support for Unix-PAM authentication, by setting `auth` to true at target server.
 
 Requirements
 ------------
 
-a debian based distribution with certbot available in apt cache(no need to manually install).
+A Debian based distribution with certbot available in current apt sources.
 
 Role Variables
 --------------
