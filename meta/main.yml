@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Markus Mroch (Mr. Pi)
+  description: Configure a nginx reverse proxy with ansible and letsencrypt. Certificates are automatically updated on any ansible-playbook run, if necessary. Support for Unix-PAM authentication, by setting auth to true at target server.
+  company: stuvus
+
+  license: CC-BY-SA (https://creativecommons.org/licenses/by-sa/4.0/)
+
+  min_ansible_version: 2.1
+
+  github_branch: master
+
+  platforms:
+    - name: Debian
+    - name: Ubuntu
+
+  galaxy_tags:
+    - nginx
+    - reverse proxy
+    - letsencrypt
+
+dependencies: []
