@@ -1,5 +1,8 @@
 ---
 webserver:
+  staging: false
+  default_target: https://github.com/stuvusIT/reverse_proxy
+  letsencrypt_email: false #do not execute letsencrypt
   suffix:
     - ""
   prefix:

@@ -3,7 +3,7 @@ reverse_proxy
 
 Installs and configure nginx as reverse proxy. Redirects all http requests to https, certificates are automatically issued by [Let's Encrypt](https://letsencrypt.org).
 
-If necessary, certificates are automatically updated, anytime ansible-playbook is executed.
+If necessary, certificates are automatically obtained or renewed, anytime ansible-playbook is executed.
 Support for Unix-PAM authentication, by setting `auth` to true at target server.
 
 Requirements
@@ -15,6 +15,9 @@ Role Variables
 --------------
 ```yml
 webserver:
+  letsencrypt_email: <your e-mail address> #e-mail address which should be used to request letsencrypt certificates
+  default_target: <your fallback address> #default or fallback address(clients are redirected to this address in case target server isn't reachable)
+  staging: [true|false*] #use letsencrypt staging server
   suffix: #list of suffixes automatically added to all domains
     - ""
   prefix: #list of prefixes automatically added to all domains
@@ -30,7 +33,8 @@ webserver:
 
 # * default value
 ```
-Unless otherwise specified authentication isn't required for targets, all other default values are specified [here](defaults/main.yml).
+**WARNING:** `letsencrypt_email` **is required, if not specified no certificates are requested and deployed!!!**
+Default values are specified [here](defaults/main.yml) (except auth, which is specified by template file).
 
 Dependencies
 ------------
@@ -39,6 +43,8 @@ Example Playbook
 ----------------
 ```yml
 webserver:
+  letsencrypt_email: test@example.com
+  default_target: www.example.com
   suffix:
     - example.com
     - example.my-domain.com
