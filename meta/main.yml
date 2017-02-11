@@ -3,7 +3,7 @@ galaxy_info:
   description: Configure a nginx reverse proxy with ansible and letsencrypt. Certificates are automatically updated on any ansible-playbook run, if necessary. Support for Unix-PAM authentication, by setting auth to true at target server.
   company: stuvus
 
-  license: CC-BY-SA (https://creativecommons.org/licenses/by-sa/4.0/)
+  license: https://creativecommons.org/licenses/by-sa/4.0/
 
   min_ansible_version: 2.1
 
@@ -15,9 +15,10 @@ galaxy_info:
 
   galaxy_tags:
     - nginx
-    - reverse proxy
+    - reverse-proxy
     - proxy
     - letsencrypt
     - system
+    - https
 
 dependencies: []
