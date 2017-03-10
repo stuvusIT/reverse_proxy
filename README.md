@@ -29,7 +29,7 @@ proxy_targets: #list of target servers and domains served by them
 
 # * default value
 ```
-**WARNING:** `letsencrypt_email` **is required, if not specified no certificates are requested and deployed!!!**
+**WARNING:** `letsencrypt_email` **is required, if not specified no certificates are requested and deployed**
 
 Default values are specified [here](defaults/main.yml) (except auth, which is specified by template file).
 
