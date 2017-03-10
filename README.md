@@ -1,4 +1,4 @@
-# reverse_proxy
+# Reverse proxy
 
 Installs and configure nginx as reverse proxy. Redirects all http requests to https, certificates are automatically issued by [Let's Encrypt](https://letsencrypt.org).
 
@@ -11,18 +11,18 @@ A Debian based distribution with certbot available in current apt sources.
 
 ## Role Variables
 ```yml
-letsencrypt_email: <your e-mail address> #e-mail address which should be used to request letsencrypt certificates
-default_url: <your fallback address> #default or fallback address(clients are redirected to this address in case target server isn't reachable)
-staging: [true|false*] #use letsencrypt staging server
-url_suffix: #list of suffixes automatically added to all domains
+letsencrypt_email: <your e-mail address> # Email address which should be used to request Letsencrypt certificates
+default_url: <your fallback address> # Default or fallback address (clients are redirected to this address in case target server isn't reachable)
+staging: [true|false*] # Use Letsencrypt staging server
+url_suffix: # List of suffixes automatically added to all domains
   - ""
-url_prefix: #list of prefixes automatically added to all domains
+url_prefix: # List of prefixes automatically added to all domains
   - ""
   - "www."
-proxy_targets: #list of target servers and domains served by them
-  - target: <ip> #replace <ip> with an actually real target server
-    auth: [true|false*] #set auth either to true or false (enables unix pam authentication)
-    domains: #list of domains served by this target server
+proxy_targets: # List of target servers and domains served by them
+  - target: <ip> # Replace <ip> with an actually real target server
+    auth: [true|false*] # Set auth either to true or false (enables Unix PAM authentication)
+    domains: # List of domains served by this target server
       - example.com
       - fuu.de
       - testserver.bla.org
