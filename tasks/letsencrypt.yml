@@ -1,13 +1,13 @@
 ---
-- name: install certbot
+- name: Install certbot
   apt:
     name: certbot
-    state: present
+  when: ansible_pkg_mgr == "apt"
 
-- name: obtain/renew certificates
+- name: Obtain/Renew certificates
   command: certbot certonly {% if staging %}--staging {% endif %}--webroot --keep-until-expiring --expand --non-interactive --agree-tos -m {{letsencrypt_email}} -t -w /var/www/html {% for domain in item.domains%}{% for prefix in url_prefix %}{% for suffix in url_suffix %}-d {{prefix}}{% if prefix!='' %}.{% endif %}{{domain}}{% if suffix!='' %}.{% endif %}{{suffix}} {% endfor %}{% endfor %}{% endfor %}
   register: certUpdate
   changed_when: certUpdate.stdout_lines[2] != 'Certificate not yet due for renewal; no action taken.'
   with_items: "{{ proxy_targets }}"
-  notify: reload nginx
+  notify: Reload nginx
   when: letsencrypt_email != false

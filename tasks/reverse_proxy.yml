@@ -1,8 +1,6 @@
 ---
 - name: Create reverse proxy entries
   template:
-    backup: no
+    src: reverse_proxy.conf.j2
     dest: /etc/nginx/reverse_proxy.conf
-    src: files/reverse_proxy.conf
-  notify: reload nginx
-
+  notify: Reload nginx
