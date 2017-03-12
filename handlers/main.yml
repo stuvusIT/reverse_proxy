@@ -4,4 +4,3 @@
     daemon_reload: yes
     name: nginx.service
     state: reloaded
-  listen: reload nginx

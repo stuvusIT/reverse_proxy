@@ -1,24 +1,23 @@
 ---
 - name: Install nginx
-  package:
+  apt:
     name: nginx-full
     state: latest
+  when: ansible_pkg_mgr == "apt"
 
-- name: Copy base nginx config
+- name: Copy basic nginx configuration
   template:
-    backup: yes
+    src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
-    src: files/nginx.conf
-  notify: reload nginx
-    
+  notify: Reload nginx
+
 - name: Make sure nginx is enabled and running
   systemd:
     name: nginx.service
     enabled: yes
-    daemon_reload: yes
-    state: started
+    state: running
 
-- name: www-data needs access to shadow
+- name: Allow www-data to access shadow for PAM
   user:
     append: yes
     groups: shadow

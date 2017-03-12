@@ -1,7 +1,7 @@
 ---
 staging: false
 default_url: https://github.com/stuvusIT/reverse_proxy
-letsencrypt_email: false #do not execute letsencrypt
+letsencrypt_email: false # Do not execute letsencrypt
 url_suffix:
   - ""
 url_prefix:
