@@ -21,6 +21,7 @@ http {
 
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
 	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+	
 	ssl_prefer_server_ciphers on;
 
 	log_format ext_combined
@@ -38,6 +39,7 @@ http {
 	gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
 	server {
+		add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
 		listen 80;
 		root /var/www/html;
 		if ($http_user_agent !~ "Encrypt validation server" ) {
