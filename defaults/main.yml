@@ -1,4 +1,5 @@
 ---
+hsts_max_age: 300 #for staging and safty reasons(it's a one-way ticket) 5minutes, you should consider to set 2 years(63072000)
 staging: false
 default_url: https://github.com/stuvusIT/reverse_proxy
 letsencrypt_email: false # Do not execute letsencrypt
