@@ -6,7 +6,9 @@ server {
 	ssl on;
 	charset utf-8;
 	listen 443 ssl;
-	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+	if ($http_user_agent !~ "Encrypt validation server" ) {
+		add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always; #lets encrypt has to be excluded from hsts
+	}
 
 	server_name
 {% for domain in target.domains%}
