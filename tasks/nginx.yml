@@ -15,7 +15,7 @@
   systemd:
     name: nginx.service
     enabled: yes
-    state: running
+    state: started
 
 - name: Allow www-data to access shadow for PAM
   user:
