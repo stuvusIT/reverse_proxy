@@ -6,9 +6,6 @@ server {
 	ssl on;
 	charset utf-8;
 	listen 443 ssl;
-	if ($http_user_agent !~ "Encrypt validation server" ) {
-		add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always; #lets encrypt has to be excluded from hsts
-	}
 
 	server_name
 {% for domain in target.domains%}
@@ -23,6 +20,9 @@ server {
 	ssl_certificate_key /etc/letsencrypt/live/{{url_prefix[0]}}{% if url_prefix[0]!='' %}.{% endif %}{{target.domains[0]}}{% if url_suffix[0]!='' %}.{% endif %}{{url_suffix[0]}}/privkey.pem;
 
 	location / {
+		if ($http_user_agent !~ "Encrypt validation server" ) {
+			add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always; #lets encrypt has to be excluded from hsts
+		}
 		proxy_pass        http://{{ target.target }};
 		proxy_redirect    off;
 		proxy_set_header  Host               {{ target.target }};
@@ -39,6 +39,9 @@ server {
 
 	error_page 502 @defaultHost;
 	location @defaultHost {
+		if ($http_user_agent !~ "Encrypt validation server" ) {
+			add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always; #lets encrypt has to be excluded from hsts
+		}
 		return 302 {{default_url}};
 	}
 }
