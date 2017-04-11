@@ -3,8 +3,11 @@ hsts_max_age: 300 #for staging and safty reasons(it's a one-way ticket) 5minutes
 staging: false
 default_url: https://github.com/stuvusIT/reverse_proxy
 letsencrypt_email: false # Do not execute letsencrypt
-url_suffix:
+default_cert_mode: '0400'
+default_cert_group: root
+default_cert_owner: root
+domain_suffixes:
   - ""
-url_prefix:
+domain_prefixes:
   - ""
-proxy_targets: []
+proxy_domains: []

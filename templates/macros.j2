@@ -1,0 +1,32 @@
+{# vim: sw=4 ts=4 #}
+{%- macro fix_domain(domain) -%}{#- remove leading and following dot -#}
+	{%- if domain[0] == '.' and domain[-1] == '.' -%}
+		{{- domain[1:-1] -}}
+	{%- elif domain[0] == '.' -%}
+		{{- domain[1:] -}}
+	{%- elif domain[-1] == '.' -%}
+		{{- domain[:-1] -}}
+	{% else %}
+		{{- domain -}}
+	{%- endif -%}
+{%- endmacro -%}
+
+{%- macro build_domain_list(domain, separator) -%}
+	{%- if domain[-1] == '.' -%}{#- domain is already a full qualified domain name -#}
+		{#- output domain name with appended prefix and suffix, with given separator and without leading dot -#}
+		{{- separator -}}{{ domain[:-1] }}
+	{%- else -%}
+		{%- for prefix in domain_prefixes -%}{#- append all domain prefixes -#}
+		{%- for suffix in domain_suffixes -%}{#- append all domain suffixes -#}
+		{#- output domain name with appended prefix and suffix, with given separator -#}
+		{{- separator -}}{{- fix_domain( [prefix,domain,suffix] | join('.') ) -}}
+		{%- endfor -%}
+		{%- endfor -%}
+	{%- endif -%}
+{%- endmacro -%}
+
+{%- macro build_domain_list_for_domains(domains, separator) -%}
+	{%- for domain in domains.domains -%}
+		{{- build_domain_list( domain, separator ) -}}
+	{%- endfor -%}
+{%- endmacro -%}

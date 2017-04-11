@@ -1,37 +1,34 @@
 # vim: sw=4 ts=4 ft=nginx
 # {{ ansible_managed }}
 
-{% for target in proxy_targets %}
+{% from "macros.j2" import build_domain_list_for_domains, build_domain_list with context %}
+
+{%- for target in proxy_domains -%}
+{% for domains in target.served_domains %}
+# {{ target.target_host }}
+#  authentication: {% if target.auth|default(False) -%} enabled {%- else -%} disabled {%- endif %}{{ '' }}
+#  description: {{ target.target_description }}
 server {
 	ssl on;
 	charset utf-8;
 	listen 443 ssl;
 
-	server_name
-{% for domain in target.domains%}
-{% for prefix in url_prefix %}
-{% for suffix in url_suffix %}
-{{prefix}}{% if prefix!='' %}.{% endif %}{{domain}}{% if suffix!='' %}.{% endif %}{{suffix}}
-{% endfor %}
-{% endfor %}
-{% endfor %};
+	server_name {{- build_domain_list_for_domains( domains, ' ' ) -}};
 
-	ssl_certificate     /etc/letsencrypt/live/{{url_prefix[0]}}{% if url_prefix[0]!='' %}.{% endif %}{{target.domains[0]}}{% if url_suffix[0]!='' %}.{% endif %}{{url_suffix[0]}}/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/{{url_prefix[0]}}{% if url_prefix[0]!='' %}.{% endif %}{{target.domains[0]}}{% if url_suffix[0]!='' %}.{% endif %}{{url_suffix[0]}}/privkey.pem;
+	ssl_certificate     /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, ' ' ).split(' ')[1] -}}/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, ' ' ).split(' ')[1] -}}/privkey.pem;
 
 	location / {
-		if ($http_user_agent !~ "Encrypt validation server" ) {
-			add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always; #lets encrypt has to be excluded from hsts
-		}
-		proxy_pass        http://{{ target.target }};
+		add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always;
+		proxy_pass        http://{{ target.target_ip }};
 		proxy_redirect    off;
-		proxy_set_header  Host               {{ target.target }};
+		proxy_set_header  Host               {{ target.target_ip }};
 		proxy_set_header  X-Real-IP          $remote_addr;
 		proxy_set_header  X-Forwarded-For    $proxy_add_x_forwarded_for;
 		proxy_set_header  X-Forwarded-Proto  $scheme;
 		proxy_set_header  X-Forwarded-Port   $server_port;
 
-{% if target.auth|default(False) %}
+{% if domains.auth|default(False) %}
 		auth_pam              "Admins Only";
 		auth_pam_service_name "pam_unix";
 {% endif %}
@@ -42,8 +39,9 @@ server {
 		if ($http_user_agent !~ "Encrypt validation server" ) {
 			add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always; #lets encrypt has to be excluded from hsts
 		}
-		return 302 {{default_url}};
+		return 302 {{default_url|default('http://example.com')}};
 	}
 }
 
 {% endfor %}
+{%- endfor -%}
