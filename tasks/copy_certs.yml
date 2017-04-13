@@ -1,0 +1,12 @@
+---
+- name: Copy all needed certificat to target server({{ target.target_host }})
+  include: copy_cert.yml
+  loop_control:
+    loop_var: cert_type
+  with_items:
+    - cert
+    - chain
+    - fullchain
+    - privkey
+  when: "domains.{{ cert_type }}_path is defined"
+

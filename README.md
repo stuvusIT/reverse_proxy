@@ -2,36 +2,71 @@
 
 Installs and configure nginx as reverse proxy. Redirects all http requests to https, certificates are automatically issued by [Let's Encrypt](https://letsencrypt.org).
 
-If necessary, certificates are automatically obtained or renewed, anytime ansible-playbook is executed.
+If necessary, certificates are automatically obtained or renewed, any time ansible-playbook is executed.
 Support for Unix-PAM authentication, by setting `auth` to true at target server.
+Ability to restrict target domains by ip ranges and addresses.
+Options to copy obtained certificates to target servers, when requested by them.
 
 ## Requirements
 
-A Debian based distribution with certbot available in current apt sources.
+A Debian based distribution with certbot available in current apt sources. Correctly configured DNS server.
 
 ## Role Variables
-```yml
-letsencrypt_email: <your e-mail address> # Email address which should be used to request Letsencrypt certificates
-default_url: <your fallback address> # Default or fallback address (clients are redirected to this address in case target server isn't reachable)
-staging: [true|false*] # Use Letsencrypt staging server
-url_suffix: # List of suffixes automatically added to all domains
-  - ""
-url_prefix: # List of prefixes automatically added to all domains
-  - ""
-  - "www."
-proxy_targets: # List of target servers and domains served by them
-  - target: <ip> # Replace <ip> with an actually real target server
-    auth: [true|false*] # Set auth either to true or false (enables Unix PAM authentication)
-    domains: # List of domains served by this target server
-      - example.com
-      - fuu.de
-      - testserver.bla.org
 
-# * default value
-```
-**WARNING:** `letsencrypt_email` **is required, if not specified no certificates are requested and deployed**
+### Primary
+| Option             | Type            | Default                                   | Description                                                         | Required |
+|--------------------|-----------------|-------------------------------------------|---------------------------------------------------------------------|:--------:|
+| proxy_domains      | list of dicts   |                                           | List of all target servers                                          |     Y    |
+| default_url        | string          | https://github.com/stuvusIT/reverse_proxy | Url to redirect to if no target with requested domain is configured |     N    |
+| letsencrypt_email  | string          | false                                     | E-Mail address to use to request certificates                       |     Y    |
+| default_cert_mode  | string          | 0400                                      | Default file access mode on certificates at target servers          |     N    |
+| default_cert_group | string          | root                                      | Default owner group for certificates at target servers              |     N    |
+| default_cert_owner | string          | root                                      | Default owner user for certificates at target servers               |     N    |
+| default_crypto     | boolean         | true                                      | Use https as default to forward traffic                             |     N    |
+| domain_suffixes    | list of strings | `['']`                                    | Domain suffixes to append to every not full qualified domain name   |     N    |
+| domain_prefixes    | list of strings | `['']`                                    | Domain prefixes to append to every not full qualified domain name   |     N    |
 
-Default values are specified [here](defaults/main.yml) (except auth, which is specified by template file).
+
+### proxy_domains
+| Option             | Type          | Default | Description                                                                 | Required |
+|--------------------|---------------|---------|-----------------------------------------------------------------------------|:--------:|
+| target_description | string        |         | A short description of the target server                                    |     Y    |
+| target_host        | string        |         | Ansible host name (will be used to copy requested certificates)             |     Y    |
+| target_ip          | string        |         | IP address of target server (will be used as target address to redirect to) |     Y    |
+| served_domains     | list of dicts |         | List of all domain lists served by this target server                       |     Y    |
+
+### served_domains
+| Option          | Type          | Default                  | Description                                                  | Required |
+|-----------------|---------------|--------------------------|--------------------------------------------------------------|:--------:|
+| port            | integer       |                          | Target port to redirect to                                   |     N    |
+| crypto          | boolean       | {{ default_crypto }}     | Use https to forward traffic                                 |     N    |
+| auth            | boolean       | false                    | restrict access to system users                              |     N    |
+| access_control  | list of dicts |                          | A list of dicts to restrict access to given set of ip ranges |     N    |
+| fullchain_path  | string        |                          | Destination path¹ for fullchain.pem at {{ target_host }}     |     N    |
+| cert_path       | string        |                          | Destination path¹ for cert.pem at {{ target_host }}          |     N    |
+| chain_path      | string        |                          | Destination path¹ for chain.pem at {{ target_host }}         |     N    |
+| privkey_path    | string        |                          | Destination path¹ for privkey.pem at {{ target_host }}       |     N    |
+| fullchain_mode  | string        | {{ default_cert_mode }}  | File access mode for fullchain.pwm at {{ target_host }}      |     N    |
+| cert_mode       | string        | {{ default_cert_mode }}  | File access mode for cert.pwm at {{ target_host }}           |     N    |
+| chain_mode      | string        | {{ default_cert_mode }}  | File access mode for chain.pwm at {{ target_host }}          |     N    |
+| privkey_mode    | string        | {{ default_cert_mode }}  | File access mode for privkey.pwm at {{ target_host }}        |     N    |
+| fullchain_group | string        | {{ default_cert_group }} | Owner group of fullchain.pwm at {{ target_host }}            |     N    |
+| cert_group      | string        | {{ default_cert_group }} | Owner group of cert.pwm at {{ target_host }}                 |     N    |
+| chain_group     | string        | {{ default_cert_group }} | Owner group of chain.pwm at {{ target_host }}                |     N    |
+| privkey_group   | string        | {{ default_cert_group }} | Owner group of privkey.pwm at {{ target_host }}              |     N    |
+| fullchain_owner | string        | {{ default_cert_owner }} | Owner of fullchain.pwm at {{ target_host }}                  |     N    |
+| cert_owner      | string        | {{ default_cert_owner }} | Owner of cert.pwm at {{ target_host }}                       |     N    |
+| chain_owner     | string        | {{ default_cert_owner }} | Owner of chain.pwm at {{ target_host }}                      |     N    |
+| privkey_owner   | string        | {{ default_cert_owner }} | Owner of privkey.pwm at {{ target_host }}                    |     N    |
+
+¹ path must point to a file in a already existing directory. The file will be either overwritten or created.
+
+### access_control
+| Option | Type   | Default | Description                   | Required |
+|--------|--------|---------|-------------------------------|:--------:|
+| allow  | string |         | IP address or subnet to allow |     N    |
+| deny   | string |         | IP address or subnet to deny  |     N    |
+These dicts are evaluated in given order, so a complete subnet can be allowed with the exception of a given ip, see: [nginx doku](http://nginx.org/en/docs/http/ngx_http_access_module.html#allow) for future information.
 
 ## Dependencies
 
@@ -40,49 +75,41 @@ Default values are specified [here](defaults/main.yml) (except auth, which is sp
 
 ### Vars:
 ```yml
-letsencrypt_email: test@example.com
-default_url: www.example.com
-url_suffix:
-  - example.com
-  - example.my-domain.com
-url_prefix:
-  - ""
-  - "www"
-proxy_targets:
-  - target: 172.30.0.2
-    domains:
-      - pictures
-      - images
-  - target: 172.30.0.2
-    auth: true
-    domains:
-      - private.pictures
-  - target: 172.30.0.3
-    auth: false
-    domains:
-      - static
+letsencrypt_email: hostmaster@example.com
+default_url: https://stuvus.uni-stuttgart.de
+domain_suffixes:
+  - "example.com"
+proxy_domains:
+  - target_description: music player
+    target_host: mpd01
+    target_ip: 172.27.10.66
+    served_domains:
+    - access_control:
+      - allow: 172.27.0.0/16
+      - deny: all
+      port: 6680
+      https: false
+      domains:
+      - mpd
+  - target_description: DokoWiki
+    target_host: validator
+    target_ip: 172.27.10.101
+    served_domains:
+    - auth: true
+      domains:
+      - wiki
+      - www.wiki
+      - wiki.wiki.de.
 ```
 ### Result:
 This example playbook redirects as follows:
 
-| domain                                     | target server | authentication required |
-|--------------------------------------------|---------------|-------------------------|
-| pictures.example.com                       | 172.30.0.2    | no                      |
-| pictures.example.my-domain.com             | 172.30.0.2    | no                      |
-| www.pictures.example.com                   | 172.30.0.2    | no                      |
-| www.pictures.example.my-domain.com         | 172.30.0.2    | no                      |
-| images.example.com                         | 172.30.0.2    | no                      |
-| www.images.example.my-domain.com           | 172.30.0.2    | no                      |
-| www.images.example.com                     | 172.30.0.2    | no                      |
-| images.example.my-domain.com               | 172.30.0.2    | no                      |
-| private.pictures.example.com               | 172.30.0.2    | yes                     |
-| private.pictures.example.my-domain.com     | 172.30.0.2    | yes                     |
-| www.private.pictures.example.com           | 172.30.0.2    | yes                     |
-| www.private.pictures.example.my-domain.com | 172.30.0.2    | yes                     |
-| static.example.com                         | 172.30.0.3    | no                      |
-| static.example.my-domain.com               | 172.30.0.3    | no                      |
-| www.static.example.com                     | 172.30.0.3    | no                      |
-| www.static.example.my-domain.com           | 172.30.0.3    | no                      |
+| domain               | redirected to            | restrictions                         |
+|----------------------|--------------------------|--------------------------------------|
+| mpd.example.com      | http://172.27.10.66:6680 | allow: 172.27.0.0/16, deny all other |
+| wiki.example.com     | https://172.27.10.101    | only system users                    |
+| www.wiki.example.com | https://172.27.10.101    | only system users                    |
+| wiki.wiki.de         | https://172.27.10.101    | only system users                    |
 
 ## License
 
