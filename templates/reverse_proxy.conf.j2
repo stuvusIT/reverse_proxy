@@ -20,7 +20,13 @@ server {
 
 	location / {
 		add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always;
-		proxy_pass        http://{{ target.target_ip }};
+		proxy_pass        {{ '' }}
+		{%- if domains.crypto|default(default_crypto) -%}
+			https://
+		{%- else -%}
+			http://
+		{%- endif -%}{{- target.target_ip -}}
+		{%- if domains.port is defined -%}:{{- domains.port -}}{%- endif -%};
 		proxy_redirect    off;
 		proxy_set_header  Host               {{ target.target_ip }};
 		proxy_set_header  X-Real-IP          $remote_addr;
@@ -31,6 +37,12 @@ server {
 {% if domains.auth|default(False) %}
 		auth_pam              "Admins Only";
 		auth_pam_service_name "pam_unix";
+{% endif %}
+
+{% if domains.access_control is defined %}
+{% for access_control in domains.access_control %}
+		{{ access_control | first }}	{{ access_control[access_control | first] }};
+{% endfor %}
 {% endif %}
 	}
 

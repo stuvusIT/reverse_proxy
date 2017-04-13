@@ -6,6 +6,7 @@ letsencrypt_email: false # Do not execute letsencrypt
 default_cert_mode: '0400'
 default_cert_group: root
 default_cert_owner: root
+default_crypto: true
 domain_suffixes:
   - ""
 domain_prefixes:
