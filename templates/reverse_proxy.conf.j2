@@ -40,9 +40,9 @@ server {
 {% endif %}
 
 {% if domains.access_control is defined %}
-{% for access_control in domains.access_control %}
+	{% for access_control in domains.access_control %}
 		{{ access_control | first }}	{{ access_control[access_control | first] }};
-{% endfor %}
+	{% endfor %}
 {% endif %}
 	}
 

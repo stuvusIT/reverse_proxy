@@ -1,5 +1,5 @@
 ---
-- name: Copy all need certificat to target server
+- name: Copy all needed certificat to target server({{ target.target_host }})
   include: copy_cert.yml
   loop_control:
     loop_var: cert_type

@@ -17,10 +17,10 @@
 		{{- separator -}}{{ domain[:-1] }}
 	{%- else -%}
 		{%- for prefix in domain_prefixes -%}{#- append all domain prefixes -#}
-		{%- for suffix in domain_suffixes -%}{#- append all domain suffixes -#}
-		{#- output domain name with appended prefix and suffix, with given separator -#}
-		{{- separator -}}{{- fix_domain( [prefix,domain,suffix] | join('.') ) -}}
-		{%- endfor -%}
+			{%- for suffix in domain_suffixes -%}{#- append all domain suffixes -#}
+				{#- output domain name with appended prefix and suffix, with given separator -#}
+				{{- separator -}}{{- fix_domain( [prefix,domain,suffix] | join('.') ) -}}
+			{%- endfor -%}
 		{%- endfor -%}
 	{%- endif -%}
 {%- endmacro -%}

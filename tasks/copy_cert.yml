@@ -6,9 +6,6 @@
   register: current_certificate
   when: "domains.{{ cert_type }}_path is defined"
 
-- debug:
-    msg: "{{ current_certificate }}"
-
 - name: Push certificate to target server ({{ cert_type }})
   copy:
     content: "{{ current_certificate.content | b64decode }}"
