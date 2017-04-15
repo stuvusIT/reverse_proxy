@@ -37,6 +37,8 @@ http {
 	gzip_disable "msie6";
 	gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
+	add_header X-Frame-Options "sameorigin" always;
+
 	server {
 		listen 80;
 		location / {
