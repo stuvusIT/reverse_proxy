@@ -1,4 +1,9 @@
 ---
+- name: Update repositories cache
+  apt:
+    update_cache: yes
+  changed_when: false
+
 - name: Install nginx
   apt:
     name: nginx-full
