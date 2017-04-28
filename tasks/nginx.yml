@@ -7,6 +7,7 @@
 - name: Install nginx
   apt:
     name: nginx-full
+    update_cache: yes
   when: ansible_pkg_mgr == "apt"
 
 - name: Copy basic nginx configuration
