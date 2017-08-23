@@ -25,6 +25,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | default_crypto     | boolean         | true                                      | Use https as default to forward traffic                             |     N    |
 | domain_suffixes    | list of strings | `['']`                                    | Domain suffixes to append to every not full qualified domain name   |     N    |
 | domain_prefixes    | list of strings | `['']`                                    | Domain prefixes to append to every not full qualified domain name   |     N    |
+| nginx_client_max_body_size |         | 1m                                        |                                                                     |     N    |
 
 
 ### proxy_domains
