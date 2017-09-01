@@ -1,0 +1,27 @@
+---
+- name: Write hostvars to file
+  copy:
+    content: "{{ hostvars }}"
+    dest: "/tmp/reverse_proxy_hostvars"
+
+- name: Run reverseproxy-facts script
+  script: "scripts/reverseproxy-facts.py {{ ansible_hostname }} /tmp/reverse_proxy_hostvars"
+  register: reverseproxy_factgen
+
+- name: Set domain facts
+  set_fact:
+    proxy_domains: "{{ (reverseproxy_factgen.stdout|from_json).new_hostvars.proxy_domains }}"
+
+- name: "There are {{ (reverseproxy_factgen.stdout|from_json).failed_hosts.ip|length }} hosts without a connection IP"
+  fail:
+    msg: "{{ item }}"
+  with_items: "{{ (reverseproxy_factgen.stdout|from_json).failed_hosts.ip }}"
+  failed_when: false
+  changed_when: (reverseproxy_factgen.stdout|from_json).failed_hosts.ip|length>0
+
+- name: "There are {{ (reverseproxy_factgen.stdout|from_json).failed_hosts.description|length }} hosts without a description"
+  fail:
+    msg: "{{ item }}"
+  with_items: "{{ (reverseproxy_factgen.stdout|from_json).failed_hosts.description }}"
+  failed_when: false
+  changed_when: (reverseproxy_factgen.stdout|from_json).failed_hosts.description|length>0
