@@ -26,6 +26,8 @@ http {
 	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
 	ssl_prefer_server_ciphers on;
 
+	client_max_body_size {% nginx_client_max_body_size %};
+
 	log_format ext_combined
 		'[$time_iso8601] >>$upstream_addr <<$remote_addr - '
 		'$status $request_method $scheme://$host$request_uri '
@@ -39,6 +41,8 @@ http {
 	gzip on;
 	gzip_disable "msie6";
 	gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+	add_header X-Frame-Options "sameorigin" always;
 
 	server {
 		listen 80;

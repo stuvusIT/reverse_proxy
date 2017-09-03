@@ -1,8 +1,12 @@
 ---
+- name: Update repositories cache
+  apt:
+    update_cache: yes
+  changed_when: false
+
 - name: Install nginx
   apt:
     name: nginx-full
-    state: latest
   when: ansible_pkg_mgr == "apt"
 
 - name: Copy basic nginx configuration

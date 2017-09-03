@@ -14,3 +14,4 @@ domain_suffixes:
 domain_prefixes:
   - ""
 proxy_domains: []
+nginx_client_max_body_size: 1m
