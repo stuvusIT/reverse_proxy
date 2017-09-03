@@ -14,18 +14,19 @@ A Debian based distribution with certbot available in current apt sources. Corre
 ## Role Variables
 
 ### Primary
-| Option             | Type            | Default                                   | Description                                                         | Required |
-|--------------------|-----------------|-------------------------------------------|---------------------------------------------------------------------|:--------:|
-| proxy_domains      | list of dicts   |                                           | List of all target servers                                          |     Y    |
-| default_url        | string          | https://github.com/stuvusIT/reverse_proxy | Url to redirect to if no target with requested domain is configured |     N    |
-| letsencrypt_email  | string          | false                                     | E-Mail address to use to request certificates                       |     Y    |
-| default_cert_mode  | string          | 0400                                      | Default file access mode on certificates at target servers          |     N    |
-| default_cert_group | string          | root                                      | Default owner group for certificates at target servers              |     N    |
-| default_cert_owner | string          | root                                      | Default owner user for certificates at target servers               |     N    |
-| default_crypto     | boolean         | true                                      | Use https as default to forward traffic                             |     N    |
-| domain_suffixes    | list of strings | `['']`                                    | Domain suffixes to append to every not full qualified domain name   |     N    |
-| domain_prefixes    | list of strings | `['']`                                    | Domain prefixes to append to every not full qualified domain name   |     N    |
-
+| Option               | Type            | Default                                   | Description                                                         | Required |
+|----------------------|-----------------|-------------------------------------------|---------------------------------------------------------------------|:--------:|
+| proxy_domains        | list of dicts   |                                           | List of all target servers                                          |     Y    |
+| default_url          | string          | https://github.com/stuvusIT/reverse_proxy | Url to redirect to if no target with requested domain is configured |     N    |
+| letsencrypt_email    | string          | false                                     | E-Mail address to use to request certificates                       |     Y    |
+| default_cert_mode    | string          | 0400                                      | Default file access mode on certificates at target servers          |     N    |
+| default_cert_group   | string          | root                                      | Default owner group for certificates at target servers              |     N    |
+| default_cert_owner   | string          | root                                      | Default owner user for certificates at target servers               |     N    |
+| default_crypto       | boolean         | true                                      | Use https as default to forward traffic                             |     N    |
+| domain_suffixes      | list of strings | `['']`                                    | Domain suffixes to append to every not full qualified domain name   |     N    |
+| domain_prefixes      | list of strings | `['']`                                    | Domain prefixes to append to every not full qualified domain name   |     N    |
+| letsencrypt_staging  | boolean         | false                                     | Use letsencrypt staging servers                                     |     N    |
+| client_max_body_size | string          | 1m                                        | Set the maximum upload size at the http context                     |     N    |
 
 ### proxy_domains
 | Option             | Type          | Default | Description                                                                 | Required |
@@ -36,29 +37,30 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | served_domains     | list of dicts |         | List of all domain lists served by this target server                       |     Y    |
 
 ### served_domains
-| Option          | Type            | Default                  | Description                                                  | Required |
-|-----------------|-----------------|--------------------------|--------------------------------------------------------------|:--------:|
-| port            | integer         |                          | Target port to redirect to                                   |     N    |
-| crypto          | boolean         | {{ default_crypto }}     | Use https to forward traffic                                 |     N    |
-| auth            | boolean         | false                    | restrict access to system users                              |     N    |
-| domains         | list of strings |                          | A list of domains to proxy¹                                  |     Y    |
-| access_control  | list of dicts   |                          | A list of dicts to restrict access to given set of ip ranges |     N    |
-| fullchain_path  | string          |                          | Destination path² for fullchain.pem at {{ target_host }}     |     N    |
-| cert_path       | string          |                          | Destination path² for cert.pem at {{ target_host }}          |     N    |
-| chain_path      | string          |                          | Destination path² for chain.pem at {{ target_host }}         |     N    |
-| privkey_path    | string          |                          | Destination path² for privkey.pem at {{ target_host }}       |     N    |
-| fullchain_mode  | string          | {{ default_cert_mode }}  | File access mode for fullchain.pwm at {{ target_host }}      |     N    |
-| cert_mode       | string          | {{ default_cert_mode }}  | File access mode for cert.pwm at {{ target_host }}           |     N    |
-| chain_mode      | string          | {{ default_cert_mode }}  | File access mode for chain.pwm at {{ target_host }}          |     N    |
-| privkey_mode    | string          | {{ default_cert_mode }}  | File access mode for privkey.pwm at {{ target_host }}        |     N    |
-| fullchain_group | string          | {{ default_cert_group }} | Owner group of fullchain.pwm at {{ target_host }}            |     N    |
-| cert_group      | string          | {{ default_cert_group }} | Owner group of cert.pwm at {{ target_host }}                 |     N    |
-| chain_group     | string          | {{ default_cert_group }} | Owner group of chain.pwm at {{ target_host }}                |     N    |
-| privkey_group   | string          | {{ default_cert_group }} | Owner group of privkey.pwm at {{ target_host }}              |     N    |
-| fullchain_owner | string          | {{ default_cert_owner }} | Owner of fullchain.pwm at {{ target_host }}                  |     N    |
-| cert_owner      | string          | {{ default_cert_owner }} | Owner of cert.pwm at {{ target_host }}                       |     N    |
-| chain_owner     | string          | {{ default_cert_owner }} | Owner of chain.pwm at {{ target_host }}                      |     N    |
-| privkey_owner   | string          | {{ default_cert_owner }} | Owner of privkey.pwm at {{ target_host }}                    |     N    |
+| Option               | Type            | Default                  | Description                                                  | Required |
+|----------------------|-----------------|--------------------------|--------------------------------------------------------------|:--------:|
+| port                 | integer         |                          | Target port to redirect to                                   |     N    |
+| crypto               | boolean         | {{ default_crypto }}     | Use https to forward traffic                                 |     N    |
+| auth                 | boolean         | false                    | restrict access to system users                              |     N    |
+| domains              | list of strings |                          | A list of domains to proxy¹                                  |     Y    |
+| access_control       | list of dicts   |                          | A list of dicts to restrict access to given set of ip ranges |     N    |
+| fullchain_path       | string          |                          | Destination path² for fullchain.pem at {{ target_host }}     |     N    |
+| cert_path            | string          |                          | Destination path² for cert.pem at {{ target_host }}          |     N    |
+| chain_path           | string          |                          | Destination path² for chain.pem at {{ target_host }}         |     N    |
+| privkey_path         | string          |                          | Destination path² for privkey.pem at {{ target_host }}       |     N    |
+| fullchain_mode       | string          | {{ default_cert_mode }}  | File access mode for fullchain.pwm at {{ target_host }}      |     N    |
+| cert_mode            | string          | {{ default_cert_mode }}  | File access mode for cert.pwm at {{ target_host }}           |     N    |
+| chain_mode           | string          | {{ default_cert_mode }}  | File access mode for chain.pwm at {{ target_host }}          |     N    |
+| privkey_mode         | string          | {{ default_cert_mode }}  | File access mode for privkey.pwm at {{ target_host }}        |     N    |
+| fullchain_group      | string          | {{ default_cert_group }} | Owner group of fullchain.pwm at {{ target_host }}            |     N    |
+| cert_group           | string          | {{ default_cert_group }} | Owner group of cert.pwm at {{ target_host }}                 |     N    |
+| chain_group          | string          | {{ default_cert_group }} | Owner group of chain.pwm at {{ target_host }}                |     N    |
+| privkey_group        | string          | {{ default_cert_group }} | Owner group of privkey.pwm at {{ target_host }}              |     N    |
+| fullchain_owner      | string          | {{ default_cert_owner }} | Owner of fullchain.pwm at {{ target_host }}                  |     N    |
+| cert_owner           | string          | {{ default_cert_owner }} | Owner of cert.pwm at {{ target_host }}                       |     N    |
+| chain_owner          | string          | {{ default_cert_owner }} | Owner of chain.pwm at {{ target_host }}                      |     N    |
+| privkey_owner        | string          | {{ default_cert_owner }} | Owner of privkey.pwm at {{ target_host }}                    |     N    |
+| client_max_body_size | string          |                          | Set the maximum upload size at server context                |     N    |
 
 ¹ Can be either a fully qualified domain name(with following dot ex. `www.example.com.`) or a short internal domain(will be expanded by `domain_suffixes` and `domain_prefixes` ex. `wiki` or `static.media`)\\
 ² path must point to a file in a already existing directory. The file will be either overwritten or created.
