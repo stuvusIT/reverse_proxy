@@ -26,8 +26,6 @@ http {
 	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
 	ssl_prefer_server_ciphers on;
 
-	client_max_body_size {% nginx_client_max_body_size %};
-
 	log_format ext_combined
 		'[$time_iso8601] >>$upstream_addr <<$remote_addr - '
 		'$status $request_method $scheme://$host$request_uri '
