@@ -18,6 +18,10 @@ server {
 	ssl_certificate     /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, ' ' ).split(' ')[1] -}}/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, ' ' ).split(' ')[1] -}}/privkey.pem;
 
+{% if domains.client_max_body_size is defined %}
+	client_max_body_size {{ domains.client_max_body_size }};
+
+{% endif %}
 	location / {
 		add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always;
 		proxy_pass        {{ '' }}
@@ -51,7 +55,7 @@ server {
 		if ($http_user_agent !~ "Encrypt validation server" ) {
 			add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always; #lets encrypt has to be excluded from hsts
 		}
-		return 302 {{default_url|default('http://example.com')}};
+		return 302 {{ default_url|default('http://example.com') }};
 	}
 }
 
