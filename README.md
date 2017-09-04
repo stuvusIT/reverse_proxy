@@ -74,11 +74,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 
 These dicts are evaluated in given order, so a complete subnet can be allowed with the exception of a given ip, see: [nginx doku](http://nginx.org/en/docs/http/ngx_http_access_module.html#allow) for future information.
 
-## Dependencies
-
 ## Example Playbook
-### Playbook:
-
 ### Vars:
 ```yml
 letsencrypt_email: hostmaster@example.com
