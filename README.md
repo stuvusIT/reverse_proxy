@@ -37,30 +37,30 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | served_domains     | list of dicts |         | List of all domain lists served by this target server                       |     Y    |
 
 ### served_domains
-| Option               | Type            | Default                    | Description                                                                        | Required |
-|----------------------|-----------------|----------------------------|------------------------------------------------------------------------------------|:--------:|
-| port                 | integer         |                            | Target port to redirect to                                                         |     N    |
-| crypto               | boolean         | `{{ default_crypto }}`     | Use https to forward traffic                                                       |     N    |
-| auth                 | boolean         | `false`                    | restrict access to system users                                                    |     N    |
-| domains              | list of strings |                            | A list of domains to proxy [(see below for more information)¹](#served_domains__1) |     Y    |
-| access_control       | list of dicts   |                            | A list of dicts to restrict access to given set of ip ranges                       |     N    |
-| fullchain_path       | string          |                            | [Destination path²](#served_domains__2) for fullchain.pem at {{ target_host }}     |     N    |
-| cert_path            | string          |                            | [Destination path²](#served_domains__2) for cert.pem at {{ target_host }}          |     N    |
-| chain_path           | string          |                            | [Destination path²](#served_domains__2) for chain.pem at {{ target_host }}         |     N    |
-| privkey_path         | string          |                            | [Destination path²](#served_domains__2) for privkey.pem at {{ target_host }}       |     N    |
-| fullchain_mode       | string          | `{{ default_cert_mode }}`  | File access mode for fullchain.pwm at {{ target_host }}                            |     N    |
-| cert_mode            | string          | `{{ default_cert_mode }}`  | File access mode for cert.pwm at {{ target_host }}                                 |     N    |
-| chain_mode           | string          | `{{ default_cert_mode }}`  | File access mode for chain.pwm at {{ target_host }}                                |     N    |
-| privkey_mode         | string          | `{{ default_cert_mode }}`  | File access mode for privkey.pwm at {{ target_host }}                              |     N    |
-| fullchain_group      | string          | `{{ default_cert_group }}` | Owner group of fullchain.pwm at {{ target_host }}                                  |     N    |
-| cert_group           | string          | `{{ default_cert_group }}` | Owner group of cert.pwm at {{ target_host }}                                       |     N    |
-| chain_group          | string          | `{{ default_cert_group }}` | Owner group of chain.pwm at {{ target_host }}                                      |     N    |
-| privkey_group        | string          | `{{ default_cert_group }}` | Owner group of privkey.pwm at {{ target_host }}                                    |     N    |
-| fullchain_owner      | string          | `{{ default_cert_owner }}` | Owner of fullchain.pwm at {{ target_host }}                                        |     N    |
-| cert_owner           | string          | `{{ default_cert_owner }}` | Owner of cert.pwm at {{ target_host }}                                             |     N    |
-| chain_owner          | string          | `{{ default_cert_owner }}` | Owner of chain.pwm at {{ target_host }}                                            |     N    |
-| privkey_owner        | string          | `{{ default_cert_owner }}` | Owner of privkey.pwm at {{ target_host }}                                          |     N    |
-| client_max_body_size | string          |                            | Set the maximum upload size at server context                                      |     N    |
+| Option               | Type            | Default                                | Description                                                                        | Required |
+|----------------------|-----------------|----------------------------------------|------------------------------------------------------------------------------------|:--------:|
+| port                 | integer         |                                        | Target port to redirect to                                                         |     N    |
+| crypto               | boolean         | [`{{ default_crypto }}`](#primary)     | Use https to forward traffic                                                       |     N    |
+| auth                 | boolean         | `false`                                | restrict access to system users                                                    |     N    |
+| domains              | list of strings |                                        | A list of domains to proxy [(see below for more information)¹](#served_domains__1) |     Y    |
+| access_control       | list of dicts   |                                        | A list of dicts to restrict access to given set of ip ranges                       |     N    |
+| fullchain_path       | string          |                                        | [Destination path²](#served_domains__2) for fullchain.pem at _target_host_         |     N    |
+| cert_path            | string          |                                        | [Destination path²](#served_domains__2) for cert.pem at _target_host_              |     N    |
+| chain_path           | string          |                                        | [Destination path²](#served_domains__2) for chain.pem at _target_host_             |     N    |
+| privkey_path         | string          |                                        | [Destination path²](#served_domains__2) for privkey.pem at _target_host_           |     N    |
+| fullchain_mode       | string          | [`{{ default_cert_mode }}`](#primary)  | File access mode for fullchain.pwm at _target_host_                                |     N    |
+| cert_mode            | string          | [`{{ default_cert_mode }}`](#primary)  | File access mode for cert.pwm at _target_host_                                     |     N    |
+| chain_mode           | string          | [`{{ default_cert_mode }}`](#primary)  | File access mode for chain.pwm at _target_host_                                    |     N    |
+| privkey_mode         | string          | [`{{ default_cert_mode }}`](#primary)  | File access mode for privkey.pwm at _target_host_                                  |     N    |
+| fullchain_group      | string          | [`{{ default_cert_group }}`](#primary) | Owner group of fullchain.pwm at _target_host_                                      |     N    |
+| cert_group           | string          | [`{{ default_cert_group }}`](#primary) | Owner group of cert.pwm at _target_host_                                           |     N    |
+| chain_group          | string          | [`{{ default_cert_group }}`](#primary) | Owner group of chain.pwm at _target_host_                                          |     N    |
+| privkey_group        | string          | [`{{ default_cert_group }}`](#primary) | Owner group of privkey.pwm at _target_host_                                        |     N    |
+| fullchain_owner      | string          | [`{{ default_cert_owner }}`](#primary) | Owner of fullchain.pwm at _target_host_                                            |     N    |
+| cert_owner           | string          | [`{{ default_cert_owner }}`](#primary) | Owner of cert.pwm at _target_host_                                                 |     N    |
+| chain_owner          | string          | [`{{ default_cert_owner }}`](#primary) | Owner of chain.pwm at _target_host_                                                |     N    |
+| privkey_owner        | string          | [`{{ default_cert_owner }}`](#primary) | Owner of privkey.pwm at _target_host_                                              |     N    |
+| client_max_body_size | string          |                                        | Set the maximum upload size at server context                                      |     N    |
 
 <a id="served_domains__1">¹</a> Can be either a fully qualified domain name(with following dot ex. `www.example.com.`) or a short internal domain(will be expanded by `domain_suffixes` and `domain_prefixes` ex. `wiki` or `static.media`)
 
