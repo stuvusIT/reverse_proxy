@@ -37,19 +37,25 @@ server {
 		proxy_set_header  X-Forwarded-For    $proxy_add_x_forwarded_for;
 		proxy_set_header  X-Forwarded-Proto  $scheme;
 		proxy_set_header  X-Forwarded-Port   $server_port;
-
 {% if domains.auth|default(False) %}
+
 		auth_pam              "Admins Only";
 		auth_pam_service_name "pam_unix";
 {% endif %}
-
 {% if domains.access_control is defined %}
+
 	{% for access_control in domains.access_control %}
 		{{ access_control | first }}	{{ access_control[access_control | first] }};
 	{% endfor %}
 {% endif %}
 	}
 
+{% for location_block in domains.extra_locations|default([]) %}
+	location {{ location_block|first }} {
+		{{ location_block[location_block|first] }}
+	}
+
+{% endfor %}
 	error_page 502 @defaultHost;
 	location @defaultHost {
 		if ($http_user_agent !~ "Encrypt validation server" ) {
