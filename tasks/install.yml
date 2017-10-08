@@ -1,0 +1,13 @@
+---
+- name: Update apt repositories cache
+  apt:
+    update_cache: yes
+  changed_when: false
+
+- name: Install nginx
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - nginx-full
+    - certbot
+  when: ansible_pkg_mgr == "apt"

@@ -1,4 +1,8 @@
 ---
-- include: nginx.yml
-- include: letsencrypt.yml
-- include: reverse_proxy.yml
+- import_tasks: install.yml
+- import_tasks: nginx.yml
+- include_tasks: certificates.yml
+  with_items: "{{ proxy_domains }}"
+  loop_control:
+    loop_var: target
+- import_tasks: reverse_proxy.yml
