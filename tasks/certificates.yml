@@ -10,9 +10,8 @@
   changed_when: certUpdate.stdout_lines[2]|default('') != 'Certificate not yet due for renewal; no action taken.'
   notify: Reload nginx
 
-
 - name: Copy all needed certificates to target servers
-  include: copy_certs.yml
+  include_tasks: copy_certs.yml
   with_items: "{{ target.served_domains }}"
   loop_control:
     loop_var: domains

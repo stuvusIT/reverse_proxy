@@ -1,14 +1,4 @@
 ---
-- name: Update repositories cache
-  apt:
-    update_cache: yes
-  changed_when: false
-
-- name: Install nginx
-  apt:
-    name: nginx-full
-  when: ansible_pkg_mgr == "apt"
-
 - name: Copy basic nginx configuration
   template:
     src: nginx.conf.j2
@@ -26,3 +16,9 @@
     append: yes
     groups: shadow
     name: www-data
+
+- name: Create reverse proxy entries
+  template:
+    src: reverse_proxy.conf.j2
+    dest: /etc/nginx/reverse_proxy.conf
+  notify: Reload nginx
