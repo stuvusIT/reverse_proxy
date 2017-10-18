@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Markus Mroch (Mr. Pi)
   description: Configure a nginx reverse proxy with ansible and letsencrypt. Certificates are automatically updated on any ansible-playbook run, if necessary. Support for Unix-PAM authentication, by setting auth to true at target server.
