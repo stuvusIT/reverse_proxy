@@ -18,7 +18,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 |-----------------------------------------|-----------------|--------------------------------------------------|---------------------------------------------------------------------|:-------------------------:|
 | proxy_domains                           | list of dicts   |                                                  | List of all target servers                                          |             Y             |
 | default_url                             | string          | `https://github.com/stuvusIT/reverse_proxy`      | Url to redirect to if no target with requested domain is configured |             N             |
-| letsencrypt_email                       | string          | `false`                                          | E-Mail address to use to request certificates                       |             Y             |
+| letsencrypt_email                       | string          |                                                  | E-Mail address to use to request certificates                       |             Y             |
 | default_cert_mode                       | string          | `0400`                                           | Default file access mode on certificates at target servers          |             N             |
 | default_cert_group                      | string          | `root`                                           | Default owner group for certificates at target servers              |             N             |
 | default_cert_owner                      | string          | `root`                                           | Default owner user for certificates at target servers               |             N             |

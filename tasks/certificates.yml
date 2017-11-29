@@ -3,7 +3,7 @@
   command: '{% from "roles/reverse_proxy/templates/macros.j2" import build_domain_list_for_domains with context %}{#Fuck Ansible, you need to speciefy a absolute path #}
     certbot certonly {% if letsencrypt_staging %}--staging {% endif %}
     --webroot --keep-until-expiring --expand --non-interactive --agree-tos
-    -m {{ letsencrypt_email }} -t -w /var/www/html
+    -m {{ letsencrypt_email|mandatory }} -t -w /var/www/html
     {{ build_domain_list_for_domains( item, " -d " ) }}'
   with_items: "{{ target.served_domains }}"
   register: certUpdate
