@@ -14,19 +14,32 @@ A Debian based distribution with certbot available in current apt sources. Corre
 ## Role Variables
 
 ### Primary
-| Option               | Type            | Default                                     | Description                                                         | Required |
-|----------------------|-----------------|---------------------------------------------|---------------------------------------------------------------------|:--------:|
-| proxy_domains        | list of dicts   |                                             | List of all target servers                                          |     Y    |
-| default_url          | string          | `https://github.com/stuvusIT/reverse_proxy` | Url to redirect to if no target with requested domain is configured |     N    |
-| letsencrypt_email    | string          | `false`                                     | E-Mail address to use to request certificates                       |     Y    |
-| default_cert_mode    | string          | `0400`                                      | Default file access mode on certificates at target servers          |     N    |
-| default_cert_group   | string          | `root`                                      | Default owner group for certificates at target servers              |     N    |
-| default_cert_owner   | string          | `root`                                      | Default owner user for certificates at target servers               |     N    |
-| default_crypto       | boolean         | `true`                                      | Use https as default to forward traffic                             |     N    |
-| domain_suffixes      | list of strings | `['']`                                      | Domain suffixes to append to every not full qualified domain name   |     N    |
-| domain_prefixes      | list of strings | `['']`                                      | Domain prefixes to append to every not full qualified domain name   |     N    |
-| letsencrypt_staging  | boolean         | `false`                                     | Use letsencrypt staging servers                                     |     N    |
-| client_max_body_size | string          | `1m`                                        | Set the maximum upload size at the http context                     |     N    |
+| Option                                  | Type            | Default                                          | Description                                                                             |          Required         |
+|-----------------------------------------|-----------------|--------------------------------------------------|-----------------------------------------------------------------------------------------|:-------------------------:|
+| proxy_domains                           | list of dicts   |                                                  | List of all target servers                                                              |             Y             |
+| default_url                             | string          | `https://github.com/stuvusIT/reverse_proxy`      | Url to redirect to if no target with requested domain is configured                     |             N             |
+| letsencrypt_email                       | string          |                                                  | E-Mail address to use to request certificates                                           |             Y             |
+| default_cert_mode                       | string          | `0400`                                           | Default file access mode on certificates at target servers                              |             N             |
+| default_cert_group                      | string          | `root`                                           | Default owner group for certificates at target servers                                  |             N             |
+| default_cert_owner                      | string          | `root`                                           | Default owner user for certificates at target servers                                   |             N             |
+| default_crypto                          | boolean         | `true`                                           | Use https as default to forward traffic                                                 |             N             |
+| domain_suffixes                         | list of strings | `['']`                                           | Domain suffixes to append to every not full qualified domain name                       |             N             |
+| domain_prefixes                         | list of strings | `['']`                                           | Domain prefixes to append to every not full qualified domain name                       |             N             |
+| letsencrypt_staging                     | boolean         | `false`                                          | Use letsencrypt staging servers                                                         |             N             |
+| client_max_body_size                    | string          | `1m`                                             | Set the maximum upload size at the http context                                         |             N             |
+| hsts_max_age                            | integer         | `300`                                            | Strict Transport Security (HSTS) time of life                                           | N ___(but recommended)___ |
+| reverse_proxy_use_dhparam               | bool            | `True`                                           | Use and generate Diffie-Hellman parameters                                              |             N             |
+| reverse_proxy_dhparam_size              | integer         | `2048`                                           | Size of Diffie-Hellman parameter                                                        |             N             |
+| reverse_proxy_dhparam_max_age           | integer         | `5184000` (60 days)                              | Max age of Diffie-Hellman parameters, before regenerate                                 |             N             |
+| reverse_proxy_dhparam_path              | string          | `/etc/ssl/dhparam.pem`                           | Path to store the Diffie-Hellman parameters                                             |             N             |
+| reverse_proxy_ssl_session_timeout       | string          | `1d`                                             | nginx `ssl_session_timeout` option                                                      |             N             |
+| reverse_proxy_ssl_session_cache         | string          | `shared:SSL:50m`                                 | nginx `ssl_session_cache` option                                                        |             N             |
+| reverse_proxy_ssl_session_tickets       | boolean         | `False`                                          | nginx `ssl_session_tickets` option                                                      |             N             |
+| reverse_proxy_ssl_protocols             | list of strings | `TLSv1 TLSv1.1 TLSv1.2`                          | nginx `ssl_protocols` option                                                            |             N             |
+| reverse_proxy_ssl_ciphers               | list of strings | ___see [defaults/main.yml](defaults/main.yml)___ | nginx `ssl_ciphers` option                                                              |             N             |
+| reverse_proxy_ssl_prefer_server_ciphers | boolean         | `True`                                           | nginx `ssl_prefer_server_ciphers` option                                                |             N             |
+| reverse_proxy_ssl_stapling              | boolean         | `True`                                           | Enable OCSP Stapling                                                                    |             N             |
+| reverse_proxy_ssl_trusted_certificate   | string          |                                                  | nginx `ssl_trusted_certificate` option, path to the intermediate certificate of your CA |             N             |
 
 ### proxy_domains
 | Option             | Type          | Default | Description                                                                 | Required |
