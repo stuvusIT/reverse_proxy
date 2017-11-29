@@ -19,15 +19,15 @@ server {
 	ssl_certificate_key /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, ' ' ).split(' ')[1] -}}/privkey.pem;
 	ssl_session_timeout {{ reverse_proxy_ssl_session_timeout }};
 	ssl_session_cache {{ reverse_proxy_ssl_session_cache }};
-	ssl_session_tickets {% if reverse_proxy_ssl_session_tickets == True %}on{% else %}off{% endif %};
+	ssl_session_tickets {% if reverse_proxy_ssl_session_tickets %}on{% else %}off{% endif %};
 
 	ssl_protocols {{ reverse_proxy_ssl_protocols|join(' ') }};
 	ssl_ciphers {{ reverse_proxy_ssl_ciphers|join(':') }};
-	ssl_prefer_server_ciphers {% if reverse_proxy_ssl_prefer_server_ciphers == True %}on{% else %}off{% endif %};
+	ssl_prefer_server_ciphers {% if reverse_proxy_ssl_prefer_server_ciphers %}on{% else %}off{% endif %};
 
 	add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always;
 
-{% if reverse_proxy_ssl_stapling == True %}
+{% if reverse_proxy_ssl_stapling %}
 	ssl_stapling on;
 	ssl_stapling_verify on;
 	{% if reverse_proxy_ssl_trusted_certificate is defined -%}
@@ -35,7 +35,7 @@ server {
 	{%- endif %}
 
 {% endif %}
-{% if reverse_proxy_use_dhparam == True %}
+{% if reverse_proxy_use_dhparam %}
 	ssl_dhparam {{ reverse_proxy_dhparam_path }};
 
 {% endif %}

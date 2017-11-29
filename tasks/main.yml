@@ -5,5 +5,5 @@
   loop_control:
     loop_var: target
 - import_tasks: dhparam.yml
-  when: reverse_proxy_use_dhparam == True
+  when: reverse_proxy_use_dhparam
 - import_tasks: nginx.yml
