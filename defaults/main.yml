@@ -7,6 +7,17 @@ letsencrypt_email: false # Do not execute letsencrypt
 default_cert_mode: '0400'
 default_cert_group: root
 default_cert_owner: root
+reverse_proxy_use_dhparam: True
+reverse_proxy_dhparam_path: /etc/ssl/dhparam.pem
+reverse_proxy_dhparam_size: 2048
+reverse_proxy_dhparam_max_age: 5184000  # 60 days
+reverse_proxy_ssl_session_timeout: 1d
+reverse_proxy_ssl_session_cache: shared:SSL:50m
+reverse_proxy_ssl_session_tickets: False
+reverse_proxy_ssl_protocols: TLSv1 TLSv1.1 TLSv1.2
+reverse_proxy_ssl_ciphers: 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:!DSS'
+reverse_proxy_ssl_prefer_server_ciphers: True
+reverse_proxy_ssl_stapling: True
 default_crypto: true
 client_max_body_size: 1m
 domain_suffixes:

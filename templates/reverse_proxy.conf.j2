@@ -17,13 +17,33 @@ server {
 
 	ssl_certificate     /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, ' ' ).split(' ')[1] -}}/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, ' ' ).split(' ')[1] -}}/privkey.pem;
+	ssl_session_timeout {{ reverse_proxy_ssl_session_timeout }};
+	ssl_session_cache {{ reverse_proxy_ssl_session_cache }};
+	ssl_session_tickets {% if reverse_proxy_ssl_session_tickets == True %}on{% else %}off{% endif %};
 
+	ssl_protocols {{ reverse_proxy_ssl_protocols }};
+	ssl_ciphers {{ reverse_proxy_ssl_ciphers }};
+	ssl_prefer_server_ciphers {% if reverse_proxy_ssl_prefer_server_ciphers == True %}on{% else %}off{% endif %};
+
+	add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always;
+
+{% if reverse_proxy_ssl_stapling == True %}
+	ssl_stapling on;
+	ssl_stapling_verify on;
+	{% if reverse_proxy_ssl_trusted_certificate is defined -%}
+	ssl_trusted_certificate {{ reverse_proxy_ssl_trusted_certificate }};
+	{%- endif %}
+
+{% endif %}
+{% if reverse_proxy_use_dhparam == True %}
+	ssl_dhparam {{ reverse_proxy_dhparam_path }};
+
+{% endif %}
 {% if domains.client_max_body_size is defined %}
 	client_max_body_size {{ domains.client_max_body_size }};
 
 {% endif %}
 	location / {
-		add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always;
 		proxy_pass        {{ '' }}
 		{%- if domains.crypto|default(default_crypto) -%}
 			https://
