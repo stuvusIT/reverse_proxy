@@ -21,8 +21,8 @@ server {
 	ssl_session_cache {{ reverse_proxy_ssl_session_cache }};
 	ssl_session_tickets {% if reverse_proxy_ssl_session_tickets == True %}on{% else %}off{% endif %};
 
-	ssl_protocols {{ reverse_proxy_ssl_protocols }};
-	ssl_ciphers {{ reverse_proxy_ssl_ciphers }};
+	ssl_protocols {{ reverse_proxy_ssl_protocols|join(' ') }};
+	ssl_ciphers {{ reverse_proxy_ssl_ciphers|join(':') }};
 	ssl_prefer_server_ciphers {% if reverse_proxy_ssl_prefer_server_ciphers == True %}on{% else %}off{% endif %};
 
 	add_header Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains; preload" always;
