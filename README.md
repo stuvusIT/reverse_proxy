@@ -7,6 +7,8 @@ Support for Unix-PAM authentication, by setting `auth` to true at target server.
 Ability to restrict target domains by ip ranges and addresses.
 Options to copy obtained certificates to target servers, when requested by them.
 
+When multiple names are given for a `served_domain`, only the first name will proxy, while the other names will redirect to the first name.
+
 ## Requirements
 
 A Debian based distribution with certbot available in current apt sources. Correctly configured DNS server.
@@ -118,14 +120,14 @@ proxy_domains:
       - wiki.wiki.de.
 ```
 ### Result:
-This example playbook redirects as follows:
+This example playbook proxies as follows:
 
-| domain               | redirected to            | restrictions                         |
-|----------------------|--------------------------|--------------------------------------|
-| mpd.example.com      | http://172.27.10.66:6680 | allow: 172.27.0.0/16, deny all other |
-| wiki.example.com     | https://172.27.10.101    | only system users                    |
-| www.wiki.example.com | https://172.27.10.101    | only system users                    |
-| wiki.wiki.de         | https://172.27.10.101    | only system users                    |
+| Domain               | Proxies to               | Redirects to             | Restrictions                         |
+|----------------------|--------------------------|--------------------------|--------------------------------------|
+| mpd.example.com      | http://172.27.10.66:6680 | -                        | allow: 172.27.0.0/16, deny all other |
+| wiki.example.com     | https://172.27.10.101    | -                        | only system users                    |
+| www.wiki.example.com | https://172.27.10.101    | https://wiki.example.com | only system users                    |
+| wiki.wiki.de         | https://172.27.10.101    | https://wiki.example.com | only system users                    |
 
 ## License
 
