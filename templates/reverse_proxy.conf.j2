@@ -45,7 +45,7 @@ server {
 {% endif %}
 {% set primary_name = build_domain_list_for_domains(domains, ',').split(',')[1] %}
 	if ($host != "{{ primary_name }}") {
-		rewrite ^/.*$ https://{{ primary_name }}/$1 redirect;
+		rewrite ^ https://{{ primary_name }}$request_uri? redirect;
 	}
 
 	location / {
