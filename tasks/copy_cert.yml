@@ -1,12 +1,12 @@
 ---
-- name: Fetch certificate from reverse proxy ({{ cert_type }})
+- name: Fetch certificate ({{ cert_type }}) for {{ target.target_host }}
   slurp:
     src: '{%- from "roles/reverse_proxy/templates/macros.j2" import build_domain_list_for_domains with context -%}
     /etc/letsencrypt/live/{{- build_domain_list_for_domains( domains, " " ).split(" ")[1] -}}/{{- cert_type -}}.pem'
   register: current_certificate
   when: "domains.{{ cert_type }}_path is defined"
 
-- name: Push certificate to target server ({{ cert_type }})
+- name: Push certificate ({{ cert_type }}) to {{ target.target_host }}
   copy:
     content: "{{ current_certificate.content | b64decode }}"
     dest: "{{ domains[cert_type + '_path'] }}"
