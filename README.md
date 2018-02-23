@@ -44,7 +44,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | reverse_proxy_ssl_trusted_certificate       | string          |                                                  | nginx `ssl_trusted_certificate` option, path to the intermediate certificate of your CA |             N             |
 | reverse_proxy_redirect_to_first_domain      | boolean         | `True`                                           | Use first domain from every `served_domains` -> `domains` block as default domain       |             N             |
 | reverse_proxy_redirect_to_first_domain_code | integer         | `302`                                            | Specify HTTP redirect code for redirects to first(default) domain                       |             N             |
-| reverse_proxy_https_redirect_code           | integer         | `302`                                            | Allow to define the HTTP Code to redirect the user to https                             |             N             |
+| reverse_proxy_https_redirect_code           | integer         | `302`                                            | HTTP status code used to direct users to the https version of a page                    |             N             |
 
 ### proxy_domains
 | Option             | Type          | Default | Description                                                                 | Required |
@@ -88,9 +88,10 @@ A Debian based distribution with certbot available in current apt sources. Corre
 <a id="served_domains__2">²</a> Path must point to a file in a already existing directory. The file will be either overwritten or created.
 
 ### access_control
-| Option | Type   | Default | Description                   | Required |  |      |        |  |                              |   |
-|:-------|:-------|:--------|:------------------------------|:--------:|:-|:-----|:-------|:-|:-----------------------------|:--|
-| allow  | string |         | IP address or subnet to allow |    N     |  | deny | string |  | IP address or subnet to deny | N |
+| Option | Type   | Default | Description                   | Required |
+|:-------|:-------|:--------|:------------------------------|:--------:|
+| allow  | string |         | IP address or subnet to allow |    N     |
+| deny   | string |         | IP address or subnet to deny  |    N     |
 
 These dicts are evaluated in given order, so a complete subnet can be allowed with the exception of a given ip, see: [nginx doku](http://nginx.org/en/docs/http/ngx_http_access_module.html#allow) for future information.
 
