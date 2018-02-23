@@ -50,6 +50,7 @@ reverse_proxy_ssl_prefer_server_ciphers: True
 reverse_proxy_ssl_stapling: True
 reverse_proxy_redirect_to_first_domain: True
 reverse_proxy_redirect_to_first_domain_code: 302
+reverse_proxy_redirect_code: 302
 default_crypto: true
 client_max_body_size: 1m
 domain_suffixes:
