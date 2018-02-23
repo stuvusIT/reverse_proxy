@@ -50,6 +50,9 @@ server {
 	}
 {% endif %}
 
+{% if domains.redirect is defined %}
+	return {{ reverse_proxy_redirect_code }} {{ domains.redirect }}$request_uri?;
+{% else %}
 	location / {
 		proxy_pass        {{ '' }}
 		{%- if domains.crypto|default(default_crypto) -%}
@@ -79,6 +82,7 @@ server {
 	{% endfor %}
 {% endif %}
 	}
+{% endif %}
 
 {% for location_block in domains.extra_locations|default([]) %}
 	location {{ location_block|first }} {
