@@ -84,6 +84,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | redirect              | string                  |                                        | Instead of proxying the request, redirect to this URL. The request URI is automatically appended.                   | N        |
 | enable_http2_proxy    | boolean                 | `false`                                | Enable http2 for this host                                                                                          | N        |
 | use_keepalive         | boolean                 | `false`                                | Enable keepalive for this host                                                                                      | N        |
+| proxy_keepalive       | integer                 | `1024`                                 | Number of connections to keepalive between the proxy and the host                                                   | N        |
 
 <a id="served_domains__1">¹</a> Can be either a fully qualified domain name(with following dot ex. `www.example.com.`) or a short internal domain(will be expanded by `domain_suffixes` and `domain_prefixes` ex. `wiki` or `static.media`)
 

@@ -50,10 +50,10 @@ server {
 	}
 {% endif %}
 
-{% if domains.use_keepalive %}
+{% if domains.use_keepalive is defined and domains.use_keepalive %}
 	{%- set primary_name = build_domain_list_for_domains(domains, ',').split(',')[1] %}
 	upstream {{ primary_name }} {
-		keepalive 1024;
+		keepalive {{ domains.proxy_keepalive | default(1024) }};
 		server        {{ '' }}
 		{%- if domains.crypto|default(default_crypto) -%}
 			https://
