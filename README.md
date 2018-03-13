@@ -16,7 +16,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 ## Role Variables
 
 ### Primary
-| Option                                      | Type            | Default                                          | Description                                                                             |         Required          |
+| Option                                      | Type            | Default                                          | Description                                                                             |          Required         |
 |:--------------------------------------------|:----------------|:-------------------------------------------------|:----------------------------------------------------------------------------------------|:-------------------------:|
 | proxy_domains                               | list of dicts   |                                                  | List of all target servers                                                              |             Y             |
 | default_url                                 | string          | `https://github.com/stuvusIT/reverse_proxy`      | Url to redirect to if no target with requested domain is configured                     |             N             |
@@ -45,6 +45,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | reverse_proxy_redirect_to_first_domain      | boolean         | `True`                                           | Use first domain from every `served_domains` -> `domains` block as default domain       |             N             |
 | reverse_proxy_redirect_to_first_domain_code | integer         | `302`                                            | Specify HTTP redirect code for redirects to first(default) domain                       |             N             |
 | reverse_proxy_https_redirect_code           | integer         | `302`                                            | HTTP status code used to direct users to the https version of a page                    |             N             |
+| reverse_proxy_redirect_code                 | integer         | `302`                                            | Default HTTP status code used for custom domain redirects                               |             N             |
 
 ### proxy_domains
 | Option             | Type          | Default | Description                                                                 | Required |
@@ -55,33 +56,34 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | served_domains     | list of dicts |         | List of all domain lists served by this target server                       |    Y     |
 
 ### served_domains
-| Option                | Type                    | Default                                | Description                                                                                                         | Required |
-|:----------------------|:------------------------|:---------------------------------------|:--------------------------------------------------------------------------------------------------------------------|:--------:|
-| port                  | integer                 |                                        | Target port to redirect to                                                                                          |    N     |
-| crypto                | boolean                 | [`{{ default_crypto }}`](#primary)     | Use https to forward traffic                                                                                        |    N     |
-| auth                  | boolean                 | `false`                                | restrict access to system users                                                                                     |    N     |
-| domains               | list of strings         |                                        | A list of domains to proxy [(see below for more information)¹](#served_domains__1)                                  |    Y     |
-| access_control        | list of dicts           |                                        | A list of dicts to restrict access to given set of ip ranges                                                        |    N     |
-| fullchain_path        | string                  |                                        | [Destination path²](#served_domains__2) for fullchain.pem at _target_host_                                          |    N     |
-| cert_path             | string                  |                                        | [Destination path²](#served_domains__2) for cert.pem at _target_host_                                               |    N     |
-| chain_path            | string                  |                                        | [Destination path²](#served_domains__2) for chain.pem at _target_host_                                              |    N     |
-| privkey_path          | string                  |                                        | [Destination path²](#served_domains__2) for privkey.pem at _target_host_                                            |    N     |
-| fullchain_mode        | string                  | [`{{ default_cert_mode }}`](#primary)  | File access mode for fullchain.pwm at _target_host_                                                                 |    N     |
-| cert_mode             | string                  | [`{{ default_cert_mode }}`](#primary)  | File access mode for cert.pwm at _target_host_                                                                      |    N     |
-| chain_mode            | string                  | [`{{ default_cert_mode }}`](#primary)  | File access mode for chain.pwm at _target_host_                                                                     |    N     |
-| privkey_mode          | string                  | [`{{ default_cert_mode }}`](#primary)  | File access mode for privkey.pwm at _target_host_                                                                   |    N     |
-| fullchain_group       | string                  | [`{{ default_cert_group }}`](#primary) | Owner group of fullchain.pwm at _target_host_                                                                       |    N     |
-| cert_group            | string                  | [`{{ default_cert_group }}`](#primary) | Owner group of cert.pwm at _target_host_                                                                            |    N     |
-| chain_group           | string                  | [`{{ default_cert_group }}`](#primary) | Owner group of chain.pwm at _target_host_                                                                           |    N     |
-| privkey_group         | string                  | [`{{ default_cert_group }}`](#primary) | Owner group of privkey.pwm at _target_host_                                                                         |    N     |
-| fullchain_owner       | string                  | [`{{ default_cert_owner }}`](#primary) | Owner of fullchain.pwm at _target_host_                                                                             |    N     |
-| cert_owner            | string                  | [`{{ default_cert_owner }}`](#primary) | Owner of cert.pwm at _target_host_                                                                                  |    N     |
-| chain_owner           | string                  | [`{{ default_cert_owner }}`](#primary) | Owner of chain.pwm at _target_host_                                                                                 |    N     |
-| privkey_owner         | string                  | [`{{ default_cert_owner }}`](#primary) | Owner of privkey.pwm at _target_host_                                                                               |    N     |
-| client_max_body_size  | string                  |                                        | Set the maximum upload size at server context                                                                       |    N     |
-| extra_location_config | string                  |                                        | Additional configuration items to add to the default location block (location /)                                    |    N     |
-| extra_locations       | list of key value dicts | []                                     | Add custom locations to this server block, the key should be a location string, the value defines the location body |    N     |
-| redirect              | string                  |                                        | Instead of proxying the request, redirect to this URL. The request URI is automatically appended.                   |    N     |
+| Option                | Type                    | Default                                         | Description                                                                                                         | Required |
+|:----------------------|:------------------------|:------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------|:--------:|
+| port                  | integer                 |                                                 | Target port to redirect to                                                                                          |     N    |
+| crypto                | boolean                 | [`{{ default_crypto }}`](#primary)              | Use https to forward traffic                                                                                        |     N    |
+| auth                  | boolean                 | `false`                                         | restrict access to system users                                                                                     |     N    |
+| domains               | list of strings         |                                                 | A list of domains to proxy [(see below for more information)¹](#served_domains__1)                                  |     Y    |
+| access_control        | list of dicts           |                                                 | A list of dicts to restrict access to given set of ip ranges                                                        |     N    |
+| fullchain_path        | string                  |                                                 | [Destination path²](#served_domains__2) for fullchain.pem at _target_host_                                          |     N    |
+| cert_path             | string                  |                                                 | [Destination path²](#served_domains__2) for cert.pem at _target_host_                                               |     N    |
+| chain_path            | string                  |                                                 | [Destination path²](#served_domains__2) for chain.pem at _target_host_                                              |     N    |
+| privkey_path          | string                  |                                                 | [Destination path²](#served_domains__2) for privkey.pem at _target_host_                                            |     N    |
+| fullchain_mode        | string                  | [`{{ default_cert_mode }}`](#primary)           | File access mode for fullchain.pwm at _target_host_                                                                 |     N    |
+| cert_mode             | string                  | [`{{ default_cert_mode }}`](#primary)           | File access mode for cert.pwm at _target_host_                                                                      |     N    |
+| chain_mode            | string                  | [`{{ default_cert_mode }}`](#primary)           | File access mode for chain.pwm at _target_host_                                                                     |     N    |
+| privkey_mode          | string                  | [`{{ default_cert_mode }}`](#primary)           | File access mode for privkey.pwm at _target_host_                                                                   |     N    |
+| fullchain_group       | string                  | [`{{ default_cert_group }}`](#primary)          | Owner group of fullchain.pwm at _target_host_                                                                       |     N    |
+| cert_group            | string                  | [`{{ default_cert_group }}`](#primary)          | Owner group of cert.pwm at _target_host_                                                                            |     N    |
+| chain_group           | string                  | [`{{ default_cert_group }}`](#primary)          | Owner group of chain.pwm at _target_host_                                                                           |     N    |
+| privkey_group         | string                  | [`{{ default_cert_group }}`](#primary)          | Owner group of privkey.pwm at _target_host_                                                                         |     N    |
+| fullchain_owner       | string                  | [`{{ default_cert_owner }}`](#primary)          | Owner of fullchain.pwm at _target_host_                                                                             |     N    |
+| cert_owner            | string                  | [`{{ default_cert_owner }}`](#primary)          | Owner of cert.pwm at _target_host_                                                                                  |     N    |
+| chain_owner           | string                  | [`{{ default_cert_owner }}`](#primary)          | Owner of chain.pwm at _target_host_                                                                                 |     N    |
+| privkey_owner         | string                  | [`{{ default_cert_owner }}`](#primary)          | Owner of privkey.pwm at _target_host_                                                                               |     N    |
+| client_max_body_size  | string                  |                                                 | Set the maximum upload size at server context                                                                       |     N    |
+| extra_location_config | string                  |                                                 | Additional configuration items to add to the default location block (location /)                                    |     N    |
+| extra_locations       | list of key value dicts | []                                              | Add custom locations to this server block, the key should be a location string, the value defines the location body |     N    |
+| redirect              | string                  |                                                 | Instead of proxying the request, redirect to this URL. The request URI is automatically appended.                   |     N    |
+| redirect_code         | integer                 | [`{{ reverse_proxy_redirect_code }}`](#primary) | HTTP status code used to redirect the user to the URL specified by `redirect`                                       |     N    |
 
 <a id="served_domains__1">¹</a> Can be either a fully qualified domain name(with following dot ex. `www.example.com.`) or a short internal domain(will be expanded by `domain_suffixes` and `domain_prefixes` ex. `wiki` or `static.media`)
 
