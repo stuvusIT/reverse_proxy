@@ -51,7 +51,7 @@ server {
 {% endif %}
 
 {% if domains.redirect is defined %}
-	return {{ reverse_proxy_redirect_code }} {{ domains.redirect }}$request_uri?;
+	return {{ domains.redirect_code|default(reverse_proxy_redirect_code) }} {{ domains.redirect }}$request_uri?;
 {% else %}
 	location / {
 		proxy_pass        {{ '' }}
