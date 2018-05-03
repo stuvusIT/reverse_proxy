@@ -17,3 +17,8 @@
     - nginx-full
     - certbot
   when: ansible_pkg_mgr == "apt"
+
+- name: Disable the certbot service
+  service:
+    name: certbot.service
+    enabled: false
