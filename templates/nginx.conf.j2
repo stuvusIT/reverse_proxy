@@ -48,6 +48,10 @@ http {
 	}
 {% endfor %}
 
+{%- for path,options in reverse_proxy_cache_paths.iteritems() %}
+	proxy_cache_path {{ path }} {{ options | join(' ') }};
+{% endfor %}
+
 	server {
 		listen 80;
 		location / {

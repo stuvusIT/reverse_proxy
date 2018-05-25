@@ -47,6 +47,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | reverse_proxy_https_redirect_code           | integer         | `302`                                            | HTTP status code used to direct users to the https version of a page                    |             N             |
 | reverse_proxy_redirect_code                 | integer         | `302`                                            | Default HTTP status code used for custom domain redirects                               |             N             |
 | reverse_proxy_upstreams                     | dict of strings | `{}`                                             | Name-Content dict of upstreams to add to nginx.conf                                     |             N             |
+| reverse_proxy_cache_paths                   | dict of strings | `{}`                                             | Path-Options dict of cache paths to add to nginx.conf (see example below)               |             N             |
 
 ### proxy_domains
 | Option             | Type          | Default | Description                                                                 | Required |
@@ -105,6 +106,10 @@ letsencrypt_email: hostmaster@example.com
 default_url: https://stuvus.uni-stuttgart.de
 domain_suffixes:
   - "example.com"
+reverse_proxy_cache_paths:
+  /var/mycache:
+    - keys_zone=my_cache:50m
+    - max_size=500g
 proxy_domains:
   - target_description: music player
     target_host: mpd01
