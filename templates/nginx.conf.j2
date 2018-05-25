@@ -54,6 +54,13 @@ http {
 
 	server {
 		listen 80;
+
+{% for location,content in reverse_proxy_additional_http_locations.iteritems() %}
+		location {{ location }} {
+			{{ content }}
+		}
+
+{% endfor %}
 		location / {
 			root /var/www/html;
 			if ($http_user_agent !~ "Encrypt validation server" ) {
@@ -61,6 +68,7 @@ http {
 				return {{ reverse_proxy_https_redirect_code }} https://$host$request_uri;
 			}
 		}
+
 	}
 	include /etc/nginx/reverse_proxy.conf;
 }

@@ -48,6 +48,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | reverse_proxy_redirect_code                 | integer         | `302`                                            | Default HTTP status code used for custom domain redirects                               |             N             |
 | reverse_proxy_upstreams                     | dict of strings | `{}`                                             | Name-Content dict of upstreams to add to nginx.conf                                     |             N             |
 | reverse_proxy_cache_paths                   | dict of strings | `{}`                                             | Path-Options dict of cache paths to add to nginx.conf (see example below)               |             N             |
+| reverse_proxy_additional_http_locations     | dict of strings | `{}`                                             | Match-Content dict of additional `location` blocks to add to the server on port 80      |             N             |
 
 ### proxy_domains
 | Option             | Type          | Default | Description                                                                 | Required |
