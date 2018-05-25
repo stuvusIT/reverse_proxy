@@ -46,6 +46,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | reverse_proxy_redirect_to_first_domain_code | integer         | `302`                                            | Specify HTTP redirect code for redirects to first(default) domain                       |             N             |
 | reverse_proxy_https_redirect_code           | integer         | `302`                                            | HTTP status code used to direct users to the https version of a page                    |             N             |
 | reverse_proxy_redirect_code                 | integer         | `302`                                            | Default HTTP status code used for custom domain redirects                               |             N             |
+| reverse_proxy_upstreams                     | dict of strings | `{}`                                             | Name-Content dict of upstreams to add to nginx.conf                                     |             N             |
 
 ### proxy_domains
 | Option             | Type          | Default | Description                                                                 | Required |

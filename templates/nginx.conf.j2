@@ -42,6 +42,12 @@ http {
 
 	add_header X-Frame-Options "sameorigin" always;
 
+{%- for name,content in reverse_proxy_upstreams.iteritems() %}
+	upstream {{ name }} {
+		{{ content }}
+	}
+{% endfor %}
+
 	server {
 		listen 80;
 		location / {
