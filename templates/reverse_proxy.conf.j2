@@ -4,7 +4,7 @@
 {% from "macros.j2" import build_domain_list_for_domains, build_domain_list with context %}
 
 {%- for target in proxy_domains -%}
-{% for domains in target.served_domains %}
+{% for domains in target.served_domains if not ('reverse_proxy_skip' in domains and domains.reverse_proxy_skip) %}
 # {{ target.target_host }}
 #  authentication: {% if target.auth|default(False) -%} enabled {%- else -%} disabled {%- endif %}{{ '' }}
 #  description: {{ target.target_description }}

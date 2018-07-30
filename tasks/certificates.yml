@@ -1,6 +1,6 @@
 ---
 - name: Obtain/Renew certificates for {{target.target_host}} ({{ target.served_domains[0].domains | first }}...)
-  command: '{% from "roles/reverse_proxy/templates/macros.j2" import build_domain_list_for_domains with context %}{#Fuck Ansible, you need to speciefy a absolute path #}
+  command: '{% from "roles/reverse_proxy/templates/macros.j2" import build_domain_list_for_domains with context %}{#Fuck Ansible, you need to specify a absolute path #}
     certbot certonly {% if letsencrypt_staging %}--staging {% endif %}
     --webroot --keep-until-expiring --expand --renew-with-new-domains --non-interactive --agree-tos
     -m {{ letsencrypt_email|mandatory }} -t -w /var/www/html
@@ -9,9 +9,11 @@
   register: certUpdate
   changed_when: certUpdate.stdout_lines[2]|default('') != 'Certificate not yet due for renewal; no action taken.'
   notify: Reload nginx
+  when: '"reverse_proxy_skip" in target and target.reverse_proxy_skip'
 
 - name: Copy all needed certificates to {{ target.target_host }} ({{ target.served_domains[0].domains | first }}...)
   include_tasks: copy_certs.yml
   with_items: "{{ target.served_domains }}"
   loop_control:
     loop_var: domains
+  when: '"reverse_proxy_skip" in target and target.reverse_proxy_skip'
