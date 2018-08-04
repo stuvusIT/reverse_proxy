@@ -11,7 +11,7 @@
 server {
 	ssl on;
 	charset utf-8;
-	listen 443 ssl;
+	listen 443 {% if domains.enable_http2_proxy %} http2 {% endif %} ssl;
 
 	server_name {{- build_domain_list_for_domains( domains, ' ' ) -}};
 
@@ -50,17 +50,36 @@ server {
 	}
 {% endif %}
 
-{% if domains.redirect is defined %}
-	return {{ domains.redirect_code|default(reverse_proxy_redirect_code) }} {{ domains.redirect }}$request_uri?;
-{% else %}
-	location / {
-		proxy_pass        {{ '' }}
+{% if domains.use_keepalive is defined and domains.use_keepalive %}
+	{%- set primary_name = build_domain_list_for_domains(domains, ',').split(',')[1] %}
+	upstream {{ primary_name }} {
+		keepalive {{ domains.proxy_keepalive | default(1024) }};
+		server        {{ '' }}
 		{%- if domains.crypto|default(default_crypto) -%}
 			https://
 		{%- else -%}
 			http://
 		{%- endif -%}{{- target.target_ip -}}
 		{%- if domains.port is defined -%}:{{- domains.port -}}{%- endif -%};
+	}
+{% endif %}
+{% if domains.redirect is defined %}
+	return {{ domains.redirect_code|default(reverse_proxy_redirect_code) }} {{ domains.redirect }}$request_uri?;
+{% else %}
+	location / {
+		{% if domains.use_keepalive %}
+		proxy_pass http://{{ primary_name }};
+		proxy_http_version 1.1;
+		proxy_set_header Connection "";
+		{% else %}
+		proxy_pass        {{ '' }}
+		{%- if domains.crypto|default(default_crypto) -%}
+		https://
+		{%- else -%}
+		http://
+		{%- endif -%}{{- target.target_ip -}}
+		{%- if domains.port is defined -%}:{{- domains.port -}}{%- endif -%};
+		{% endif %};
 		proxy_redirect    off;
 		proxy_set_header  Host               $host;
 		proxy_set_header  X-Real-IP          $remote_addr;

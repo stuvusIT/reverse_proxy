@@ -59,6 +59,7 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | served_domains     | list of dicts |         | List of all domain lists served by this target server                       |    Y     |
 
 ### served_domains
+
 | Option                | Type                    | Default                                         | Description                                                                                                         | Required |
 |:----------------------|:------------------------|:------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------|:--------:|
 | port                  | integer                 |                                                 | Target port to redirect to                                                                                          |     N    |
@@ -87,6 +88,10 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | extra_locations       | list of key value dicts | []                                              | Add custom locations to this server block, the key should be a location string, the value defines the location body |     N    |
 | redirect              | string                  |                                                 | Instead of proxying the request, redirect to this URL. The request URI is automatically appended.                   |     N    |
 | redirect_code         | integer                 | [`{{ reverse_proxy_redirect_code }}`](#primary) | HTTP status code used to redirect the user to the URL specified by `redirect`                                       |     N    |
+| enable_http2_proxy    | boolean                 | `false`                                         | Enable http2 for this host                                                                                          |     N    |
+| use_keepalive         | boolean                 | `false`                                         | Enable keepalive for this host                                                                                      |     N    |
+| proxy_keepalive       | integer                 | `1024`                                          | Number of connections to keepalive between the proxy and the host                                                   |     N    |
+
 
 <a id="served_domains__1">¹</a> Can be either a fully qualified domain name(with following dot ex. `www.example.com.`) or a short internal domain(will be expanded by `domain_suffixes` and `domain_prefixes` ex. `wiki` or `static.media`)
 
