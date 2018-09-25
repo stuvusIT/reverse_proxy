@@ -11,7 +11,7 @@
 server {
 	ssl on;
 	charset utf-8;
-	listen 443 {% if domains.enable_http2_proxy %} http2 {% endif %} ssl;
+	listen 443 {% if domains.enable_http2_proxy is defined and domains.enable_http2_proxy %} http2 {% endif %} ssl;
 
 	server_name {{- build_domain_list_for_domains( domains, ' ' ) -}};
 
@@ -67,7 +67,7 @@ server {
 	return {{ domains.redirect_code|default(reverse_proxy_redirect_code) }} {{ domains.redirect }}$request_uri?;
 {% else %}
 	location / {
-		{% if domains.use_keepalive %}
+		{% if domains.use_keepalive is defined and domains.use_keepalive %}
 		proxy_pass http://{{ primary_name }};
 		proxy_http_version 1.1;
 		proxy_set_header Connection "";
