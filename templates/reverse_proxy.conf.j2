@@ -71,14 +71,14 @@ server {
 		proxy_pass http://{{ primary_name }};
 		proxy_http_version 1.1;
 		proxy_set_header Connection "";
-		{% else %}
+		{% else -%}
 		proxy_pass        {{ '' }}
 		{%- if domains.crypto|default(default_crypto) -%}
 		https://
 		{%- else -%}
 		http://
 		{%- endif -%}{{- target.target_ip -}}
-		{%- if domains.port is defined -%}:{{- domains.port -}}{%- endif -%};
+		{%- if domains.port is defined -%}:{{- domains.port -}}{%- endif -%}
 		{% endif %};
 		proxy_redirect    off;
 		proxy_set_header  Host               $host;
