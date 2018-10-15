@@ -2,13 +2,8 @@
 - name: Add the certbot repository
   apt_repository:
     repo: 'ppa:certbot/certbot'
+    update_cache: true
   when: "ansible_distribution == 'Ubuntu'"
-
-- name: Update apt repositories cache
-  apt:
-    update_cache: yes
-  changed_when: false
-  when: ansible_pkg_mgr == "apt"
 
 - name: Install dependencies
   apt:
