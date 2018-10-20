@@ -12,9 +12,9 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - xenial
-        - yakkety
-        - zesty
-        - artful
+        - bionic
+    - name: Debian
+        - stretch
 
   galaxy_tags:
     - nginx

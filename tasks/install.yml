@@ -4,12 +4,6 @@
     repo: 'ppa:certbot/certbot'
   when: "ansible_distribution == 'Ubuntu'"
 
-- name: Update apt repositories cache
-  apt:
-    update_cache: yes
-  changed_when: false
-  when: ansible_pkg_mgr == "apt"
-
 - name: Install dependencies
   apt:
     name: "{{ item }}"
