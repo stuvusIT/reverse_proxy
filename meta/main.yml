@@ -23,6 +23,8 @@ galaxy_info:
         - artful
         - bionic
         - cosmic
+    - name: Debian
+        - stretch
 
   galaxy_tags:
     - nginx
