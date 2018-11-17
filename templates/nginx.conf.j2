@@ -42,20 +42,20 @@ http {
 
 	add_header X-Frame-Options "sameorigin" always;
 
-{%- for name,content in reverse_proxy_upstreams.iteritems() %}
+{%- for name,content in reverse_proxy_upstreams.items() %}
 	upstream {{ name }} {
 		{{ content }}
 	}
 {% endfor %}
 
-{%- for path,options in reverse_proxy_cache_paths.iteritems() %}
+{%- for path,options in reverse_proxy_cache_paths.items() %}
 	proxy_cache_path {{ path }} {{ options | join(' ') }};
 {% endfor %}
 
 	server {
 		listen 80;
 
-{% for location,content in reverse_proxy_additional_http_locations.iteritems() %}
+{% for location,content in reverse_proxy_additional_http_locations.items() %}
 		location {{ location }} {
 			{{ content }}
 		}
