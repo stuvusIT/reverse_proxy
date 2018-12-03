@@ -8,4 +8,4 @@
     - chain
     - fullchain
     - privkey
-  when: "domains.{{ cert_type }}_path is defined"
+  when: "domains[cert_type + '_path'] is defined"
