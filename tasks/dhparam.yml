@@ -1,11 +1,6 @@
 ---
-- name: Get age of Diffie-Hellman parameters
-  stat:
-    path: "{{ reverse_proxy_dhparam_path }}"
-  register: reverse_proxy_dhparam_stats
-  changed_when: False
-
 - name: Generate Diffie-Hellman parameters if needed
-  command: openssl dhparam -out {{ reverse_proxy_dhparam_path }} {{ reverse_proxy_dhparam_size }}
-  when: reverse_proxy_dhparam_stats.stat.exists == False or reverse_proxy_dhparam_stats.stat.mtime|int + reverse_proxy_dhparam_max_age|int >= ansible_date_time.epoch
+  command:
+    cmd: openssl dhparam -out "{{ reverse_proxy_dhparam_path }}" "{{ reverse_proxy_dhparam_size }}"
+    creates: "{{ reverse_proxy_dhparam_path }}"
   notify: Reload nginx
