@@ -6,8 +6,7 @@
 
 - name: Install dependencies
   apt:
-    name: "{{ item }}"
-  with_items:
-    - nginx-full
-    - certbot
+    name:
+      - nginx-full
+      - certbot
   when: ansible_pkg_mgr == "apt"
