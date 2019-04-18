@@ -52,6 +52,7 @@ reverse_proxy_redirect_to_first_domain: True
 reverse_proxy_redirect_to_first_domain_code: 302
 reverse_proxy_redirect_code: 302
 reverse_proxy_https_redirect_code: 302
+reverse_proxy_error_log: /var/log/nginx/error.log
 reverse_proxy_upstreams: {}
 reverse_proxy_cache_paths: {}
 reverse_proxy_additional_http_locations: {}
