@@ -29,12 +29,17 @@ server {
 
 	{{ domains.extra_server_config | default('') }}
 
-{% if reverse_proxy_ssl_stapling %}
-	ssl_stapling on;
-	ssl_stapling_verify on;
+{% if 'reverse_proxy_ssl_verify' in domains and domains.reverse_proxy_ssl_verify or reverse_proxy_default_proxy_ssl_verify %}
+	proxy_ssl_verify on;
+
 	{% if reverse_proxy_ssl_trusted_certificate is defined -%}
-	ssl_trusted_certificate {{ reverse_proxy_ssl_trusted_certificate }};
+	proxy_ssl_trusted_certificate {{ reverse_proxy_ssl_trusted_certificate }};
 	{%- endif %}
+
+	{% if reverse_proxy_ssl_stapling %}
+		ssl_stapling on;
+		ssl_stapling_verify on;
+	{% endif %}
 
 {% endif %}
 {% if reverse_proxy_use_dhparam %}

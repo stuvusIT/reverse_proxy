@@ -48,6 +48,7 @@ reverse_proxy_ssl_ciphers:
   - '!DSS'
 reverse_proxy_ssl_prefer_server_ciphers: True
 reverse_proxy_ssl_stapling: True
+reverse_proxy_default_proxy_ssl_verify: False
 reverse_proxy_redirect_to_first_domain: True
 reverse_proxy_redirect_to_first_domain_code: 302
 reverse_proxy_redirect_code: 302
