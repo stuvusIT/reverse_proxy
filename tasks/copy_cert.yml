@@ -6,6 +6,13 @@
   register: current_certificate
   when: "domains[cert_type + '_path'] is defined"
 
+- name: Create certificate dir to {{ target.target_host }}
+  file:
+    path: "{{ domains[cert_type + '_path'] | dirname }}"
+    state: directory
+  delegate_to: "{{ target.target_host }}"
+  when: "domains[cert_type + '_path'] is defined"
+
 - name: Push certificate ({{ cert_type }}) to {{ target.target_host }}
   copy:
     content: "{{ current_certificate.content | b64decode }}"
