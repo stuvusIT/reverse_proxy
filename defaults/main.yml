@@ -17,7 +17,7 @@ reverse_proxy_ssl_protocols:
   - TLSv1
   - TLSv1.1
   - TLSv1.2
-reverse_proxy_ssl_ciphers: 
+reverse_proxy_ssl_ciphers:
   - ECDHE-ECDSA-CHACHA20-POLY1305
   - ECDHE-RSA-CHACHA20-POLY1305
   - ECDHE-ECDSA-AES128-GCM-SHA256
