@@ -2,7 +2,9 @@
 - name: Obtain/Renew certificates for {{target.target_host}} ({{ target.served_domains[0].domains | first }}...)
   command: '{% from "roles/reverse_proxy/templates/macros.j2" import build_domain_list_for_domains with context %}{#Fuck Ansible, you need to speciefy a absolute path #}
     certbot certonly {% if letsencrypt_staging %}--staging {% endif %}
-    --webroot --keep-until-expiring --expand --renew-with-new-domains --non-interactive --agree-tos
+    --expand --renew-with-new-domains --non-interactive --agree-tos --webroot
+    {% if target.keep_until_expiring|default(reverse_proxy_keep_until_expiring) %}--keep-until-expiring {% endif %}
+    {% if target.force_renew|default(reverse_proxy_force_renew) %}--force-renewal {% endif %}
     -m {{ letsencrypt_email|mandatory }} -t -w /var/www/html
     {{ build_domain_list_for_domains( item, " -d " ) }}'
   with_items: "{{ target.served_domains }}"
