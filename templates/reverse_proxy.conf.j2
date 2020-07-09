@@ -11,7 +11,7 @@
 server {
 	ssl on;
 	charset utf-8;
-	listen 443 {% if domains.enable_http2_proxy is defined and domains.enable_http2_proxy %} http2 {% endif %} ssl;
+	listen 443 {% if domains.enable_http2_proxy is not defined or not domains.enable_http2_proxy %} http2 {% endif %} ssl;
 
 	server_name {{- build_domain_list_for_domains( domains, ' ' ) -}};
 
