@@ -4,6 +4,7 @@
 {% from "macros.j2" import build_domain_list_for_domains, build_domain_list with context %}
 
 {%- for target in proxy_domains -%}
+{%- set outer_loop = loop -%}
 {% for domains in target.served_domains %}
 # {{ target.target_host }}
 #  authentication: {% if target.auth|default(False) -%} enabled {%- else -%} disabled {%- endif %}{{ '' }}
@@ -11,7 +12,7 @@
 server {
 	ssl on;
 	charset utf-8;
-	listen 443 {% if domains.enable_http2_proxy is not defined or not domains.enable_http2_proxy %} http2 {% endif %} ssl;
+	listen 443 {% if domains.enable_http2_proxy is not defined or not domains.enable_http2_proxy %} http2 {% endif %} {%- if outer_loop.index == 2 %} deferred reuseport {%- endif %} ssl;
 
 	server_name {{- build_domain_list_for_domains( domains, ' ' ) -}};
 
