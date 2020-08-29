@@ -129,3 +129,19 @@ server {
 
 {% endfor %}
 {%- endfor -%}
+
+# Configure `deferred` and `reuseport`. nginx will fail if this is configured on multiple server
+# blocks, so we configure it here instead. As long as it's only set on ONE server, it works.
+#
+# `deferred` enables TCP_DEFER_ACCEPT (see the corresponding man pages). This basically allows for
+# faster connection establishments.
+
+# `reuseport` enables SO_REUSEPORT. This has security implications because another process on the
+# machine can bind to port 80 as well, allowing it to get some connections. However, when only nginx
+# listens on port 80, every worker process can listen instead of just the master process. This way,
+# the kernel is able to distribute connections between the worker processes in kernel space instead
+# of the nginx master process in user space, which should improve performance when many connections
+# are opened. More info here: https://lwn.net/Articles/542629/
+server {
+	listen 443 deferred reuseport ssl;
+}
