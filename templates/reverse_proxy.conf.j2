@@ -71,7 +71,7 @@ server {
 	}
 {% endif %}
 {% if domains.redirect is defined %}
-	return {{ domains.redirect_code|default(reverse_proxy_redirect_code) }} {{ domains.redirect }}$request_uri?;
+	return {{ domains.redirect_code|default(reverse_proxy_redirect_code) }} {{ domains.redirect }}$request_uri;
 {% else %}
 	location / {
 		{% if not domains.no_proxy | default(false) %}
