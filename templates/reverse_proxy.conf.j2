@@ -50,10 +50,10 @@ server {
 	client_max_body_size {{ domains.client_max_body_size }};
 
 {% endif %}
-{% if reverse_proxy_redirect_to_first_domain -%}
+{% if domains.redirect_to_first_domain | default(reverse_proxy_redirect_to_first_domain) -%}
 	{%- set primary_name = build_domain_list_for_domains(domains, ',').split(',')[1] %}
 	if ($host != "{{ primary_name }}") {
-		return {{ reverse_proxy_redirect_to_first_domain_code }} https://{{ primary_name }}$request_uri;
+		return {{ domains.redirect_to_first_domain_code | default(reverse_proxy_redirect_to_first_domain_code) }} https://{{ primary_name }}$request_uri;
 	}
 {% endif %}
 
