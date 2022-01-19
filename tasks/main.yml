@@ -1,7 +1,7 @@
 ---
 - import_tasks: install.yml
 - include_tasks: certificates.yml
-  with_items: "{{ proxy_domains }}"
+  with_items: "{{ proxy_domains | mandatory }}"
   loop_control:
     loop_var: target
   tags:

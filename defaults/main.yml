@@ -65,4 +65,3 @@ domain_suffixes:
   - ""
 domain_prefixes:
   - ""
-proxy_domains: []
