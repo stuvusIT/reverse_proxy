@@ -5,69 +5,69 @@ worker_processes auto;
 pid /run/nginx.pid;
 
 events {
-	worker_connections 768;
+    worker_connections 768;
 }
 
 http {
-	sendfile on;
-	tcp_nopush on;
-	tcp_nodelay on;
-	keepalive_timeout 65;
-	types_hash_max_size 2048;
-	server_tokens off;
-	
-	include /etc/nginx/mime.types;
-	default_type application/octet-stream;
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    server_tokens off;
 
-	server_names_hash_bucket_size {{ server_names_hash_bucket_size }};
-	client_max_body_size {{ client_max_body_size }};
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
 
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
-	ssl_prefer_server_ciphers on;
+    server_names_hash_bucket_size {{ server_names_hash_bucket_size }};
+    client_max_body_size {{ client_max_body_size }};
 
-	log_format ext_combined
-		'[$time_iso8601] >>$upstream_addr <<$remote_addr - '
-		'$status $request_method $scheme://$host$request_uri '
-		'>>$bytes_sent($body_bytes_sent)bytes '
-		'<<"$http_referer" -- <$http_user_agent> $request';
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+    ssl_prefer_server_ciphers on;
 
-	access_log /var/log/nginx/access.log;
-	access_log /var/log/nginx/access_ext_combined.log ext_combined;
-	error_log {{ reverse_proxy_error_log }};
+    log_format ext_combined
+        '[$time_iso8601] >>$upstream_addr <<$remote_addr - '
+        '$status $request_method $scheme://$host$request_uri '
+        '>>$bytes_sent($body_bytes_sent)bytes '
+        '<<"$http_referer" -- <$http_user_agent> $request';
 
-	gzip on;
-	gzip_disable "msie6";
-	gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+    access_log /var/log/nginx/access.log;
+    access_log /var/log/nginx/access_ext_combined.log ext_combined;
+    error_log {{ reverse_proxy_error_log }};
 
-	add_header X-Frame-Options "sameorigin" always;
+    gzip on;
+    gzip_disable "msie6";
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+    add_header X-Frame-Options "sameorigin" always;
 
 {%- for name,content in reverse_proxy_upstreams.items() %}
-	upstream {{ name }} {
-		{{ content }}
-	}
+    upstream {{ name }} {
+        {{ content }}
+    }
 {% endfor %}
 
 {%- for path,options in reverse_proxy_cache_paths.items() %}
-	proxy_cache_path {{ path }} {{ options | join(' ') }};
+    proxy_cache_path {{ path }} {{ options | join(' ') }};
 {% endfor %}
 
-	server {
-		listen 80;
+    server {
+        listen 80;
 
 {% for location,content in reverse_proxy_additional_http_locations.items() %}
-		location {{ location }} {
-			{{ content }}
-		}
+        location {{ location }} {
+            {{ content }}
+        }
 
 {% endfor %}
-		location / {
-			root /var/www/html;
-			if ($http_user_agent !~ "Encrypt validation server" ) {
-				return {{ reverse_proxy_https_redirect_code }} https://$host$request_uri;
-			}
-		}
+        location / {
+            root /var/www/html;
+            if ($http_user_agent !~ "Encrypt validation server" ) {
+                return {{ reverse_proxy_https_redirect_code }} https://$host$request_uri;
+            }
+        }
 
-	}
-	include /etc/nginx/reverse_proxy.conf;
+    }
+    include /etc/nginx/reverse_proxy.conf;
 }
