@@ -59,6 +59,7 @@ reverse_proxy_cache_paths: {}
 reverse_proxy_additional_http_locations: {}
 reverse_proxy_keep_until_expiring: True
 reverse_proxy_force_renew: False
+reverse_proxy_additional_config: ''
 default_crypto: true
 client_max_body_size: 1m
 domain_suffixes:
