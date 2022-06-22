@@ -16,8 +16,8 @@ A Debian based distribution with certbot available in current apt sources. Corre
 ## Role Variables
 
 ### Primary
-| Option                                      | Type            | Default                                          | Description                                                                                                            |          Required         |
-|:--------------------------------------------|:----------------|:-------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------|:-------------------------:|
+| Option                                      | Type            | Default                                          | Description                                                                                                            |         Required          |
+| :------------------------------------------ | :-------------- | :----------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------- | :-----------------------: |
 | proxy_domains                               | list of dicts   |                                                  | List of all target servers                                                                                             |             Y             |
 | default_url                                 | string          | `https://github.com/stuvusIT/reverse_proxy`      | Url to redirect to if no target with requested domain is configured                                                    |             N             |
 | letsencrypt_email                           | string          |                                                  | E-Mail address to use to request certificates                                                                          |             Y             |
@@ -52,6 +52,8 @@ A Debian based distribution with certbot available in current apt sources. Corre
 | reverse_proxy_additional_http_locations     | dict of strings | `{}`                                             | Match-Content dict of additional `location` blocks to add to the server on port 80                                     |             N             |
 | reverse_proxy_keep_until_expiring           | boolean         | `True`                                           | If the requested certificate matches an existing certificate, always keep the existing one until it is due for renewal |             N             |
 | reverse_proxy_force_renew                   | boolean         | `False`                                          | Force certificate renew, regardless of whether it is near expiry                                                       |             N             |
+| reverse_proxy_additional_config             | string          |                                                  | Additional config to be written into the nginx http section once.                                                      |             N             |
+
 
 ### proxy_domains
 | Option              | Type          | Default | Description                                                                                                            | Required |

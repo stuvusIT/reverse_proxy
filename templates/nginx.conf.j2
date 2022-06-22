@@ -52,6 +52,8 @@ http {
     proxy_cache_path {{ path }} {{ options | join(' ') }};
 {% endfor %}
 
+    {{ reverse_proxy_additional_config | indent }}
+
     server {
         listen 80;
 
