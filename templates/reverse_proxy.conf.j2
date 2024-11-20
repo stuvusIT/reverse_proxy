@@ -29,7 +29,7 @@ server {
 
 	{{ domains.extra_server_config | default('') }}
 
-{% if 'reverse_proxy_ssl_verify' in domains and domains.reverse_proxy_ssl_verify or reverse_proxy_default_proxy_ssl_verify %}
+{% if 'reverse_proxy_ssl_verify' in domains and domains.reverse_proxy_ssl_verify or 'reverse_proxy_ssl_verify' not in domains and reverse_proxy_default_proxy_ssl_verify %}
 	proxy_ssl_verify on;
 
 	{% if reverse_proxy_ssl_trusted_certificate is defined -%}
